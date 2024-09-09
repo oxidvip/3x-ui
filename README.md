@@ -1,4 +1,4 @@
-[English](/README.md) | [中文](/README.zh_CN.md) | [Español](/README.es_ES.md) | [Русский](/README.ru_RU.md)
+[English](/README.md)
 
 <p align="center"><a href="#"><img src="./media/3X-UI.png" alt="Image"></a></p>
 
@@ -140,65 +140,6 @@ systemctl daemon-reload
 systemctl enable x-ui
 systemctl restart x-ui
 ```
-
-</details>
-
-## Install with Docker
-
-<details>
-  <summary>Click for Docker details</summary>
-
-#### Usage
-
-1. **Install Docker:**
-
-   ```sh
-   bash <(curl -sSL https://get.docker.com)
-   ```
-
-2. **Clone the Project Repository:**
-
-   ```sh
-   git clone https://github.com/MHSanaei/3x-ui.git
-   cd 3x-ui
-   ```
-
-3. **Start the Service:**
-
-   ```sh
-   docker compose up -d
-   ```
-
-   **OR**
-
-   ```sh
-   docker run -itd \
-      -e XRAY_VMESS_AEAD_FORCED=false \
-      -v $PWD/db/:/etc/x-ui/ \
-      -v $PWD/cert/:/root/cert/ \
-      --network=host \
-      --restart=unless-stopped \
-      --name 3x-ui \
-      ghcr.io/mhsanaei/3x-ui:latest
-   ```
-
-4. **Update to the Latest Version:**
-
-   ```sh
-   cd 3x-ui
-   docker compose down
-   docker compose pull 3x-ui
-   docker compose up -d
-   ```
-
-5. **Remove 3x-ui from Docker:**
-
-   ```sh
-   docker stop 3x-ui
-   docker rm 3x-ui
-   cd --
-   rm -r 3x-ui
-   ```
 
 </details>
 
