@@ -248,7 +248,7 @@ func (s *ServerService) GetStatus(lastStatus *Status) *Status {
 }
 
 func (s *ServerService) GetXrayVersions() ([]string, error) {
-	url := "https://api.github.com/repos/XTLS/Xray-core/releases"
+	url := "https://api.github.com/repos/GFW-knocker/Xray-core/releases"
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -269,7 +269,7 @@ func (s *ServerService) GetXrayVersions() ([]string, error) {
 	}
 	var versions []string
 	for _, release := range releases {
-		if release.TagName >= "v1.7.5" {
+		if release.TagName >= "v1.8.7-wireguard-fakehost" {
 			versions = append(versions, release.TagName)
 		}
 	}
@@ -325,7 +325,7 @@ func (s *ServerService) downloadXRay(version string) (string, error) {
 	}
 
 	fileName := fmt.Sprintf("Xray-%s-%s.zip", osName, arch)
-	url := fmt.Sprintf("https://github.com/XTLS/Xray-core/releases/download/%s/%s", version, fileName)
+	url := fmt.Sprintf("https://github.com/GFW-knocker/Xray-core/releases/download/%s/%s", version, fileName)
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
