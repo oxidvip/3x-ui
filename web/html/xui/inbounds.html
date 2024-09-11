@@ -441,7 +441,7 @@
                       <tr v-if="clientCount[dbInbound.id]">
                         <td>{{ i18n "clients" }}</td>
                         <td>
-                          <a-tag style="margin:0;" color="blue">[[ clientCount[dbInbound.id].clients ]]</a-tag>
+                          <a-tag style="margin:0;" color="green">[[ clientCount[dbInbound.id].clients ]]</a-tag>
                           <a-popover title='{{ i18n "disabled" }}' :overlay-class-name="themeSwitcher.currentTheme">
                             <template slot="content">
                               <p v-for="clientEmail in clientCount[dbInbound.id].deactive">[[ clientEmail ]]</p>
@@ -464,7 +464,7 @@
                             <template slot="content">
                               <p v-for="clientEmail in clientCount[dbInbound.id].online">[[ clientEmail ]]</p>
                             </template>
-                            <a-tag style="margin:0; padding: 0 2px;" color="green" v-if="clientCount[dbInbound.id].online.length">[[ clientCount[dbInbound.id].online.length ]]</a-tag>
+                            <a-tag style="margin:0; padding: 0 2px;" color="blue" v-if="clientCount[dbInbound.id].online.length">[[ clientCount[dbInbound.id].online.length ]]</a-tag>
                           </a-popover>
                         </td>
                       </tr>
@@ -502,7 +502,7 @@
                         <td>{{ i18n "pages.inbounds.expireDate" }}</td>
                         <td>
                           <a-tag style="min-width: 50px; text-align: center;" v-if="dbInbound.expiryTime > 0"
-                            :color="dbInbound.isExpiry? 'red': 'blue'">
+                            :color="dbInbound.isExpiry? 'red': 'green'">
                             <template v-if="app.datepicker === 'gregorian'">
                               [[ DateUtil.formatMillis(dbInbound.expiryTime) ]]
                             </template>
@@ -1280,8 +1280,8 @@
                         return "#cf3c3c"; // Red
                     case statsColor == "orange" || expColor == "orange":
                         return "#f37b24"; // Orange
-                    case statsColor == "green" || expColor == "green":
-                        return "#008771"; // Green
+                    case statsColor == "blue" || expColor == "blue":
+                        return "#0099cc"; // Blue
                     default:
                         return "#7a316f"; // purple
                 }
