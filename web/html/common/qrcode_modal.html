@@ -25,7 +25,7 @@
     </template>
     <template v-for="(row, index) in qrModal.qrcodes">
       <tr-qr-box class="qr-box">
-        <a-tag color="green" class="qr-tag"><span>[[ row.remark ]]</span></a-tag>
+        <a-tag color="blue" class="qr-tag"><span>[[ row.remark ]]</span></a-tag>
         <tr-qr-bg class="qr-bg">
           <canvas @click="copyToClipboard('qrCode-'+index, row.link)" :id="'qrCode-'+index" class="qr-cv"></canvas>
         </tr-qr-bg>
