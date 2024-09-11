@@ -31,7 +31,7 @@
           <tr>
             <td>{{ i18n "transmission" }}</td>
             <td>
-              <a-tag color="green">[[ inbound.network ]]</a-tag>
+              <a-tag color="blue">[[ inbound.network ]]</a-tag>
             </td>
           </tr>
           <template v-if="inbound.isTcp || inbound.isWs || inbound.isH2 || inbound.isHttpupgrade || inbound.isSplithttp">
@@ -91,11 +91,11 @@
     </a-col>
     <template v-if="dbInbound.hasLink()">
       {{ i18n "security" }}
-      <a-tag :color="inbound.stream.security == 'none' ? 'red' : 'green'">[[ inbound.stream.security ]]</a-tag>
+      <a-tag :color="inbound.stream.security == 'none' ? 'red' : 'blue'">[[ inbound.stream.security ]]</a-tag>
       <br />
       <template v-if="inbound.stream.security != 'none'">
         {{ i18n "domainName" }}
-        <a-tag v-if="inbound.serverName" :color="inbound.serverName ? 'green' : 'orange'">[[ inbound.serverName ? inbound.serverName : '' ]]</a-tag>
+        <a-tag v-if="inbound.serverName" :color="inbound.serverName ? 'blue' : 'orange'">[[ inbound.serverName ? inbound.serverName : '' ]]</a-tag>
         <a-tag v-else color="orange">{{ i18n "none" }}</a-tag>
       </template>
     </template>
@@ -103,7 +103,7 @@
       <tr>
         <td>{{ i18n "encryption" }}</td>
         <td>
-          <a-tag color="green">[[ inbound.settings.method ]]</a-tag>
+          <a-tag color="blue">[[ inbound.settings.method ]]</a-tag>
         </td>
       </tr>
       <tr v-if="inbound.isSS2022">
@@ -117,7 +117,7 @@
       <tr>
         <td>{{ i18n "pages.inbounds.network" }}</td>
         <td>
-          <a-tag color="green">[[ inbound.settings.network ]]</a-tag>
+          <a-tag color="blue">[[ inbound.settings.network ]]</a-tag>
         </td>
       </tr>
     </table>
@@ -127,7 +127,7 @@
         <tr>
           <td>{{ i18n "pages.inbounds.email" }}</td>
           <td v-if="infoModal.clientSettings.email">
-            <a-tag color="green">[[ infoModal.clientSettings.email ]]</a-tag>
+            <a-tag color="blue">[[ infoModal.clientSettings.email ]]</a-tag>
           </td>
           <td v-else>
             <a-tag color="red">{{ i18n "none" }}</a-tag>
@@ -168,7 +168,7 @@
         <tr>
           <td>{{ i18n "status" }}</td>
           <td>
-            <a-tag v-if="isEnable" color="green">{{ i18n "enabled" }}</a-tag>
+            <a-tag v-if="isEnable" color="blue">{{ i18n "enabled" }}</a-tag>
             <a-tag v-else>{{ i18n "disabled" }}</a-tag>
             <a-tag v-if="!isActive" color="red">{{ i18n "depleted" }}</a-tag>
           </td>
@@ -176,7 +176,7 @@
         <tr v-if="infoModal.clientStats">
           <td>{{ i18n "usage" }}</td>
           <td>
-            <a-tag color="green">[[ sizeFormat(infoModal.clientStats.up + infoModal.clientStats.down) ]]</a-tag>
+            <a-tag color="blue">[[ sizeFormat(infoModal.clientStats.up + infoModal.clientStats.down) ]]</a-tag>
             <a-tag>↑ [[ sizeFormat(infoModal.clientStats.up) ]] / [[ sizeFormat(infoModal.clientStats.down) ]] ↓</a-tag>
           </td>
         </tr>
@@ -210,7 +210,7 @@
                 </template>
               </a-tag>
             </template>
-            <a-tag v-else-if="infoModal.clientSettings.expiryTime < 0" color="green">[[ infoModal.clientSettings.expiryTime / -86400000 ]] {{ i18n "pages.client.days" }}
+            <a-tag v-else-if="infoModal.clientSettings.expiryTime < 0" color="blue">[[ infoModal.clientSettings.expiryTime / -86400000 ]] {{ i18n "pages.client.days" }}
             </a-tag>
             <a-tag v-else color="purple" class="infinite-tag">
               <svg height="10px" width="14px" viewBox="0 0 640 512" fill="currentColor">
@@ -245,7 +245,7 @@
         <a-divider>Telegram ChatID</a-divider>
         <tr-info-row class="tr-info-row">
           <tr-info-title class="tr-info-title">
-            <a-tag color="blue">[[ infoModal.clientSettings.tgId ]]</a-tag>
+            <a-tag color="green">[[ infoModal.clientSettings.tgId ]]</a-tag>
             <a-tooltip title='{{ i18n "copy" }}'>
               <a-button size="small" icon="snippets" id="copy-tg-link" @click="copyToClipboard('copy-tg-link', infoModal.clientSettings.tgId)"></a-button>
             </a-tooltip>
@@ -256,7 +256,7 @@
         <a-divider>URL</a-divider>
         <tr-info-row v-for="(link,index) in infoModal.links" class="tr-info-row">
           <tr-info-title class="tr-info-title">
-            <a-tag class="tr-info-tag" color="green">[[ link.remark ]]</a-tag>
+            <a-tag class="tr-info-tag" color="blue">[[ link.remark ]]</a-tag>
             <a-tooltip title='{{ i18n "copy" }}'>
               <a-button style="min-width: 24px;" size="small" icon="snippets" :id="'copy-url-link-'+index" @click="copyToClipboard('copy-url-link-'+index, link.link)"></a-button>
             </a-tooltip>
@@ -270,7 +270,7 @@
         <a-divider>URL</a-divider>
         <tr-info-row v-for="(link,index) in infoModal.links" class="tr-info-row">
           <tr-info-title class="tr-info-title">
-            <a-tag class="tr-info-tag" color="green">[[ link.remark ]]</a-tag>
+            <a-tag class="tr-info-tag" color="blue">[[ link.remark ]]</a-tag>
             <a-tooltip title='{{ i18n "copy" }}'>
               <a-button style="min-width: 24px;" size="small" icon="snippets" :id="'copy-url-link-'+index" @click="copyToClipboard('copy-url-link-'+index, link.link)"></a-button>
             </a-tooltip>
@@ -287,16 +287,16 @@
         </tr>
         <tr>
           <td>
-            <a-tag color="green">[[ inbound.settings.address ]]</a-tag>
+            <a-tag color="blue">[[ inbound.settings.address ]]</a-tag>
           </td>
           <td>
-            <a-tag color="green">[[ inbound.settings.port ]]</a-tag>
+            <a-tag color="blue">[[ inbound.settings.port ]]</a-tag>
           </td>
           <td>
-            <a-tag color="green">[[ inbound.settings.network ]]</a-tag>
+            <a-tag color="blue">[[ inbound.settings.network ]]</a-tag>
           </td>
           <td>
-            <a-tag color="green">[[ inbound.settings.followRedirect ]]</a-tag>
+            <a-tag color="blue">[[ inbound.settings.followRedirect ]]</a-tag>
           </td>
         </tr>
       </table>
@@ -308,13 +308,13 @@
         </tr>
         <tr>
           <td>
-            <a-tag color="green">[[ inbound.settings.auth ]]</a-tag>
+            <a-tag color="blue">[[ inbound.settings.auth ]]</a-tag>
           </td>
           <td>
-            <a-tag color="green">[[ inbound.settings.udp]]</a-tag>
+            <a-tag color="blue">[[ inbound.settings.udp]]</a-tag>
           </td>
           <td>
-            <a-tag color="green">[[ inbound.settings.ip ]]</a-tag>
+            <a-tag color="blue">[[ inbound.settings.ip ]]</a-tag>
           </td>
         </tr>
         <template v-if="inbound.settings.auth == 'password'">
@@ -326,10 +326,10 @@
           <tr v-for="account,index in inbound.settings.accounts">
             <td>[[ index ]]</td>
             <td>
-              <a-tag color="green">[[ account.user ]]</a-tag>
+              <a-tag color="blue">[[ account.user ]]</a-tag>
             </td>
             <td>
-              <a-tag color="green">[[ account.pass ]]</a-tag>
+              <a-tag color="blue">[[ account.pass ]]</a-tag>
             </td>
           </tr>
         </template>
@@ -343,10 +343,10 @@
         <tr v-for="account,index in inbound.settings.accounts">
           <td>[[ index ]]</td>
           <td>
-            <a-tag color="green">[[ account.user ]]</a-tag>
+            <a-tag color="blue">[[ account.user ]]</a-tag>
           </td>
           <td>
-            <a-tag color="green">[[ account.pass ]]</a-tag>
+            <a-tag color="blue">[[ account.pass ]]</a-tag>
           </td>
         </tr>
       </table>
@@ -397,7 +397,7 @@
             <td colspan="2">
               <tr-info-row v-for="(link,index) in infoModal.links" class="tr-info-row">
                 <tr-info-title class="tr-info-title">
-                  <a-tag color="blue">Config</a-tag>
+                  <a-tag color="green">Config</a-tag>
                   <a-tooltip title='{{ i18n "copy" }}'>
                     <a-button style="min-width: 24px;" size="small" icon="snippets" :id="'copy-url-link-'+index" @click="copyToClipboard('copy-url-link-'+index, infoModal.links[index])"></a-button>
                   </a-tooltip>
