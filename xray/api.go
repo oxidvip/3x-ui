@@ -11,7 +11,7 @@ import (
 	"x-ui/util/common"
 
 	"github.com/xtls/xray-core/app/proxyman/command"
-	statsService "github.com/gfw-knocker/xray-core/app/stats/command"
+	statsService "github.com/xtls/xray-core/app/stats/command"
 	"github.com/xtls/xray-core/common/protocol"
 	"github.com/xtls/xray-core/common/serial"
 	"github.com/xtls/xray-core/infra/conf"
