@@ -220,14 +220,6 @@ Our platform offers compatibility with a diverse range of architectures and devi
 
 - English
 - Farsi
-- Chinese
-- Russian
-- Vietnamese
-- Spanish
-- Indonesian
-- Ukrainian
-- Turkish
-- Português (Brazil)
 
 
 ## Features
@@ -296,7 +288,7 @@ Our platform offers compatibility with a diverse range of architectures and devi
 
 #### Usage
 
-**For versions `v2.1.0` and later:**
+**For versions `v2.4.0` and later:**
 
 WARP is built-in, and no additional installation is required. Simply turn on the necessary configuration in the panel.
 
