@@ -269,7 +269,7 @@ func (s *ServerService) GetXrayVersions() ([]string, error) {
 	}
 	var versions []string
 	for _, release := range releases {
-		if release.TagName >= "v1.8.7-wireguard-fakehost" {
+		if release.TagName >= "v1.8.7" {
 			versions = append(versions, release.TagName)
 		}
 	}
