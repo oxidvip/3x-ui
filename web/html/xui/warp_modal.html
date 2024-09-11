@@ -80,7 +80,7 @@
             <a-divider style="margin: 10px 0;">{{ i18n "pages.xray.outbound.outboundStatus" }}</a-divider>
             <a-form :label-col="{ md: {span:8} }" :wrapper-col="{ md: {span:14} }">
                 <template v-if="warpOutboundIndex>=0">
-                    <a-tag color="green" style="line-height: 31px;">{{ i18n "enabled" }}</a-tag>
+                    <a-tag color="blue" style="line-height: 31px;">{{ i18n "enabled" }}</a-tag>
                     <a-button @click="resetOutbound" :loading="warpModal.confirmLoading" type="danger">{{ i18n "reset" }}</a-button>
                 </template>
                 <template v-else>
