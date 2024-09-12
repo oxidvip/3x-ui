@@ -137,7 +137,7 @@ func (j *CheckClientIpJob) processLogFile() bool {
 			if matchesEmail == "" {
 				continue
 			}
-			matchesEmail = strings.Split(matchesEmail, "email: ")[1])
+			matchesEmail = strings.Split(matchesEmail, "email: ")[1]
 
 			if InboundClientIps[matchesEmail] != nil {
 				if j.contains(InboundClientIps[matchesEmail], ip) {
