@@ -2027,9 +2027,9 @@ func validateEmail(email string) (bool, error) {
 		return false, errors.New("email contains spaces, please remove them")
 	}
 
-	emailPattern := `^[a-zA-Z0-9._-]+$`
+	emailPattern := `^[a-zA-Z0-9@._-]+$`
 	if !regexp.MustCompile(emailPattern).MatchString(email) {
-		return false, errors.New("email contains invalid characters, please use only digits, dots, dashes, and underscores")
+		return false, errors.New("email contains invalid characters, please use only digits, dots, dashes, @, and underscores")
 	}
 
 	return true, nil
