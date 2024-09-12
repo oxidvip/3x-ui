@@ -119,11 +119,11 @@ function usageColor(data, threshold, total) {
         case data === null:
             return "purple";
         case total < 0:
-            return "green";
+            return "blue";
         case total == 0:
             return "purple";
         case data < total - threshold:
-            return "green";
+            return "blue";
         case data < total:
             return "orange";
         default:
@@ -136,7 +136,7 @@ function clientUsageColor(clientStats, trafficDiff) {
         case !clientStats || clientStats.total == 0:
             return "#7a316f"; // purple
         case clientStats.up + clientStats.down < clientStats.total - trafficDiff:
-            return "#008771"; // Green
+            return "#3366cc"; // Blue
         case clientStats.up + clientStats.down < clientStats.total:
             return "#f37b24"; // Orange
         default:
@@ -154,11 +154,11 @@ function userExpiryColor(threshold, client, isDark = false) {
         case expiry === null:
             return "#7a316f"; // purple
         case expiry < 0:
-            return "#008771"; // Green
+            return "#3366cc"; // Blue
         case expiry == 0:
             return "#7a316f"; // purple
         case now < expiry - threshold:
-            return "#008771"; // Green
+            return "#3366cc"; // Blue
         case now < expiry:
             return "#f37b24"; // Orange
         default:
