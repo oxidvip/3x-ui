@@ -441,8 +441,7 @@
           type: "field",
           outboundTag: "direct",
           domain: [
-            "geosite:category-ir",
-            "geosite:cn"
+            "geosite:category-ir"
           ],
           "enabled": true
         },
@@ -451,8 +450,7 @@
           outboundTag: "direct",
           ip: [
             "geoip:private",
-            "geoip:ir",
-            "geoip:cn"
+            "geoip:ir"
           ],
           enabled: true
         },
@@ -460,8 +458,6 @@
       countryOptions: [
         { label: 'Private IP/Domain', value: 'private' },
         { label: '🇮🇷 Iran', value: 'ir' },
-        { label: '🇨🇳 China', value: 'cn' },
-        { label: '🇷🇺 Russia', value: 'ru' },
       ],
       get remarkModel() {
         rm = this.allSetting.remarkModel;
@@ -704,11 +700,7 @@
           rules[1].ip = [];
           v.forEach(d => {
             let category = '';
-            if (["cn", "private"].includes(d)) {
-              category = "";
-            } else if (d === 'ru') {
-              category = "category-gov-";
-            } else {
+            if (["private", "ir"].includes(d)) {
               category = "category-";
             }
             rules[0].domain.push("geosite:" + category + d);
