@@ -19,10 +19,10 @@ bash <(curl -Ls https://raw.githubusercontent.com/oxidvip/3x-ui/master/install.s
 
 ## Install Custom Version
 
-To install your desired version, add the version to the end of the installation command. e.g., ver `v2.4.0`:
+To install your desired version, add the version to the end of the installation command. e.g., ver `v2.4.1`:
 
 ```
-bash <(curl -Ls https://raw.githubusercontent.com/oxidvip/3x-ui/master/install.sh) v2.4.0
+bash <(curl -Ls https://raw.githubusercontent.com/oxidvip/3x-ui/master/install.sh) v2.4.1
 ```
 
 ## SSL Certificate
@@ -464,4 +464,3 @@ XUI_BIN_FOLDER="bin" XUI_DB_FOLDER="/etc/x-ui" go build main.go
 ## Acknowledgment
 
 - [Iran v2ray rules](https://github.com/chocolate4u/Iran-v2ray-rules) (License: **GPL-3.0**): _Enhanced v2ray/xray and v2ray/xray-clients routing rules with built-in Iranian domains and a focus on security and adblocking._
-- [Vietnam Adblock rules](https://github.com/vuong2023/vn-v2ray-rules) (License: **GPL-3.0**): _A hosted domain hosted in Vietnam and blocklist with the most efficiency for Vietnamese._
