@@ -1,7 +1,5 @@
 [English](/README.md)
 
-<p align="center"><a href="#"><img src="./media/3X-UI.png" alt="Image"></a></p>
-
 **An Advanced Web Panel • Built on Xray Core**
 
 [![](https://img.shields.io/github/v/release/oxidvip/3x-ui.svg)](https://github.com/oxidvip/3x-ui/releases)
