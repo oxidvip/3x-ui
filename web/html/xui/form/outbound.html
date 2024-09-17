@@ -50,6 +50,9 @@
           <a-switch :checked="Object.keys(outbound.settings.noise).length >0" @change="checked => outbound.settings.noise = checked ? new Outbound.FreedomSettings.Noise() : {}"></a-switch>
         </a-form-item>
         <template v-if="Object.keys(outbound.settings.noise).length >0">
+          <a-form-item label='Type'>
+            <a-input v-model.trim="outbound.settings.noise.type"></a-input>
+          </a-form-item>
           <a-form-item label='Packet'>
             <a-input v-model.trim="outbound.settings.noise.packet"></a-input>
           </a-form-item>
