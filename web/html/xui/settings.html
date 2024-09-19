@@ -296,7 +296,7 @@
                     </a-row>
                     <a-collapse v-if="fragment" style="margin-top: 14px;">
                       <a-collapse-panel header='{{ i18n "pages.settings.fragmentSett"}}' v-if="fragment">
-                        <setting-list-item style="padding: 10px 20px" type="text" title='Packets' v-model="fragmentPackets" placeholder="1-1 | 1-3 | tlshello | ..."></setting-list-item>
+                        <setting-list-item style="padding: 10px 20px" type="text" title='Packets' v-model="fragmentPackets" placeholder="1-3 | tlshello | ..."></setting-list-item>
                         <setting-list-item style="padding: 10px 20px" type="text" title='Length' v-model="fragmentLength" placeholder="100-200"></setting-list-item>
                         <setting-list-item style="padding: 10px 20px" type="text" title='Interval' v-model="fragmentInterval" placeholder="10-20"></setting-list-item>
                       </a-collapse-panel>
