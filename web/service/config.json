@@ -1,9 +1,10 @@
 {
   "log": {
-    "access": "none",
+    "access": "./access.log",
     "dnsLog": false,
-    "error": "./error.log",
-    "loglevel": "warning"
+    "error": "none",
+    "loglevel": "warning",
+    "maskAddress": ""
   },
   "api": {
     "tag": "api",
