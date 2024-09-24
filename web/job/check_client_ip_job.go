@@ -37,7 +37,7 @@ func (j *CheckClientIpJob) Run() {
 
 	shouldClearAccessLog := false
 	iplimitActive := j.hasLimitIp()
-	f2bInstalled := j.checkFail2BanInstalled()
+	f2bInstalled := j.checkFail2BanInstalled(iplimitActive)
 	isAccessLogAvailable := j.checkAccessLogAvailable(iplimitActive)
 
 	if iplimitActive && f2bInstalled && isAccessLogAvailable {
