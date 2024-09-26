@@ -115,7 +115,9 @@
 </template>
 
 <!-- sniffing -->
-<template>
-    {{template "form/sniffing"}}
-</template>
+<a-collapse>
+    <a-collapse-panel header='Sniffing'>
+        {{template "form/sniffing"}}
+    </a-collapse-panel>
+</a-collapse>
 {{end}}
