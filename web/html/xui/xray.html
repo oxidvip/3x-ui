@@ -235,32 +235,54 @@
                       <setting-list-item type="switch" title='{{ i18n "pages.xray.Speedtest"}}' desc='{{ i18n "pages.xray.SpeedtestDesc"}}' v-model="SpeedTestSettings"></setting-list-item>
                     </a-list-item>
                   </a-collapse-panel>
-                  <a-collapse-panel header='{{ i18n "pages.xray.blockCountryConfigs"}}'>
+                  <a-collapse-panel header='{{ i18n "pages.xray.blockConnectionsConfigs"}}'>
                     <a-row :xs="24" :sm="24" :lg="12">
                       <a-alert type="warning" style="text-align: center;">
                         <template slot="message">
                           <a-icon type="exclamation-circle" theme="filled" style="color: #FFA031"></a-icon>
-                          {{ i18n "pages.xray.blockCountryConfigsDesc" }}
+                          {{ i18n "pages.xray.blockConnectionsConfigsDesc" }}
                         </template>
                       </a-alert>
                     </a-row>
                     <a-list-item>
-                      <setting-list-item type="switch" title='{{ i18n "pages.xray.IRIp"}}' desc='{{ i18n "pages.xray.IRIpDesc"}}' v-model="IRIpSettings"></setting-list-item>
-                      <setting-list-item type="switch" title='{{ i18n "pages.xray.IRDomain"}}' desc='{{ i18n "pages.xray.IRDomainDesc"}}' v-model="IRDomainSettings"></setting-list-item>
+                      <a-collapse>
+                            <a-collapse-panel header='{{ i18n "pages.xray.blockips"}}'>
+                                <setting-list-item type="switch" title='🇮🇷 Iran'
+                                    v-model="IRIpSettings"></setting-list-item>
+                            </a-collapse-panel>
+                        </a-collapse>
+                        <br>
+                        <a-collapse>
+                            <a-collapse-panel header='{{ i18n "pages.xray.blockdomains"}}'>
+                                <setting-list-item type="switch" title='🇮🇷 Iran'
+                                    v-model="IRDomainSettings"></setting-list-item>
+                            </a-collapse-panel>
+                        </a-collapse>
                     </a-list-item>
                   </a-collapse-panel>
-                  <a-collapse-panel header='{{ i18n "pages.xray.directCountryConfigs"}}'>
+                  <a-collapse-panel header='{{ i18n "pages.xray.directConnectionsConfigs"}}'>
                     <a-row :xs="24" :sm="24" :lg="12">
                       <a-alert type="warning" style="text-align: center;">
                         <template slot="message">
                           <a-icon type="exclamation-circle" theme="filled" style="color: #FFA031"></a-icon>
-                          {{ i18n "pages.xray.directCountryConfigsDesc" }}
+                          {{ i18n "pages.xray.directConnectionsConfigsDesc" }}
                         </template>
                       </a-alert>
                     </a-row>
                     <a-list-item>
-                      <setting-list-item type="switch" title='{{ i18n "pages.xray.DirectIRIp"}}' desc='{{ i18n "pages.xray.DirectIRIpDesc"}}' v-model="IRIpDirectSettings"></setting-list-item>
-                      <setting-list-item type="switch" title='{{ i18n "pages.xray.DirectIRDomain"}}' desc='{{ i18n "pages.xray.DirectIRDomainDesc"}}' v-model="IRDomainDirectSettings"></setting-list-item>
+                      <a-collapse>
+                            <a-collapse-panel header='{{ i18n "pages.xray.directips"}}'>
+                                <setting-list-item type="switch" title='🇮🇷 Iran'
+                                    v-model="IRIpDirectSettings"></setting-list-item>
+                            </a-collapse-panel>
+                        </a-collapse>
+                        <br>
+                        <a-collapse>
+                            <a-collapse-panel header='{{ i18n "pages.xray.directdomains"}}'>
+                                <setting-list-item type="switch" title='🇮🇷 Iran'
+                                    v-model="IRDomainDirectSettings"></setting-list-item>
+                            </a-collapse-panel>
+                        </a-collapse>
                     </a-list-item>
                   </a-collapse-panel>
                   <a-collapse-panel header='{{ i18n "pages.xray.ipv4Configs"}}'>
