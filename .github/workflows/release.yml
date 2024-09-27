@@ -2,9 +2,10 @@ name: Release 3X-UI
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "v*.*.*"
+    inputs:
+      release_tag:
+         required: true
+         type: string
 
 jobs:
   build:
