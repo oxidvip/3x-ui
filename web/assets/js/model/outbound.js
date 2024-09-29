@@ -412,10 +412,10 @@ class SockoptStreamSettings extends CommonClass {
     constructor(
         dialerProxy = "",
         interface = "",
-        tcpFastOpen = true,
+        tcpFastOpen = false,
         tcpKeepAliveInterval = 0,
-        tcpMptcp = true,
-        tcpNoDelay = true
+        tcpMptcp = false,
+        tcpNoDelay = false
     ) {
         super();
         this.dialerProxy = dialerProxy;
