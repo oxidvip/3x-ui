@@ -15,7 +15,6 @@
 bash <(curl -Ls https://raw.githubusercontent.com/oxidvip/3x-ui/master/install.sh)
 ```
 
-
 ## SSL Certificate
 
 <details>
