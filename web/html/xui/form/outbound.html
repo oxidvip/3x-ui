@@ -444,9 +444,6 @@
             <a-select-option v-for="tag in ['', ...outModal.tags]" :value="tag">[[ tag ]]</a-select-option>
           </a-select>
         </a-form-item>
-        <a-form-item label="Interface">
-            <a-input v-model="inbound.stream.sockopt.interface"></a-input>
-        </a-form-item>
         <a-form-item label="TCP Fast Open">
           <a-switch v-model="outbound.stream.sockopt.tcpFastOpen"></a-switch>
         </a-form-item>
@@ -455,7 +452,7 @@
         </a-form-item>
         <a-form-item label="Multipath TCP">
           <a-switch v-model.trim="outbound.stream.sockopt.tcpMptcp"></a-switch>
-      </a-form-item>
+        </a-form-item>
         <a-form-item label="TCP No-Delay">
           <a-switch v-model="outbound.stream.sockopt.tcpNoDelay"></a-switch>
         </a-form-item>
