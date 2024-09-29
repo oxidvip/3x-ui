@@ -411,7 +411,7 @@ class RealityStreamSettings extends CommonClass {
 class SockoptStreamSettings extends CommonClass {
     constructor(
         dialerProxy = "",
-        interface = '',
+        interface = "",
         tcpFastOpen = true,
         tcpKeepAliveInterval = 0,
         tcpMptcp = true,
