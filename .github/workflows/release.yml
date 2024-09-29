@@ -138,4 +138,4 @@ jobs:
           tag: ${{ github.event.inputs.release_tag }}
           file: x-ui-linux-${{ matrix.platform }}.tar.gz
           asset_name: x-ui-linux-${{ matrix.platform }}.tar.gz
-          latest: true
+          make_latest: true
