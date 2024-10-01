@@ -448,7 +448,6 @@ XUI_BIN_FOLDER="bin" XUI_DB_FOLDER="/etc/x-ui" go build main.go
 
 ## A Special Thanks to
 
-- [alireza0](https://github.com/alireza0/)
 - [mhsanaei](https://github.com/mhsanaei/)
 
 ## Acknowledgment
