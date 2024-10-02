@@ -88,7 +88,7 @@ case "${ARCH}" in
 esac
 
 
-wget https://github.com/MHSanaei/3x-ui/releases/latest/download/x-ui-linux-${XUI_ARCH}.tar.gz
+wget https://github.com/oxidvip/3x-ui/releases/latest/download/x-ui-linux-${XUI_ARCH}.tar.gz
 ```
 
 2. Once the compressed package is downloaded, execute the following commands to install or upgrade x-ui:
@@ -265,8 +265,6 @@ Our platform offers compatibility with a diverse range of architectures and devi
 
 #### Usage
 
-**For versions `v2.4.0` and later:**
-
 WARP is built-in, and no additional installation is required. Simply turn on the necessary configuration in the panel.
 
 </details>
@@ -277,13 +275,6 @@ WARP is built-in, and no additional installation is required. Simply turn on the
   <summary>Click for IP limit details</summary>
 
 #### Usage
-
-**Note:** IP Limit won't work correctly when using IP Tunnel.
-
-- **For versions up to `v1.6.1`:**
-  - The IP limit is built-in to the panel
-
-**For versions `v1.7.0` and newer:**
 
 To enable the IP Limit functionality, you need to install `fail2ban` and its required files by following these steps:
 
@@ -299,18 +290,8 @@ To enable the IP Limit functionality, you need to install `fail2ban` and its req
 
 3. Add a path for the access log on the panel by setting `Xray Configs/log/Access log` to `./access.log` then save and restart xray.
 
-- **For versions before `v2.1.3`:**
-  - You need to set the access log path manually in your Xray configuration:
+  - You need to set the access log path in your Xray configuration:
 
-    ```sh
-    "log": {
-      "access": "./access.log",
-      "dnsLog": false,
-      "loglevel": "warning"
-    },
-    ```
-
-- **For versions `v2.1.3` and newer:**
   - There is an option for configuring `access.log` directly from the panel.
 
 </details>
