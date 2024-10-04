@@ -221,11 +221,9 @@ Our platform offers compatibility with a diverse range of architectures and devi
 <details>
   <summary>Click for default settings details</summary>
 
-### Username & Password & webbasepath:
+### Username, Password, Port, and Web Base Path
 
-  These will be generated randomly if you skip modifying them.
-
-  - **Port:** the default port for panel is `2053`
+  If you choose not to modify these settings, they will be generated randomly.
 
 ### Database Management:
 
