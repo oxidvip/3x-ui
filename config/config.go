@@ -37,7 +37,7 @@ func GetLogLevel() LogLevel {
 	}
 	logLevel := os.Getenv("XUI_LOG_LEVEL")
 	if logLevel == "" {
-		return Info
+		return Warn
 	}
 	return LogLevel(logLevel)
 }
