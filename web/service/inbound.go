@@ -2023,10 +2023,16 @@ func (s *InboundService) GetOnlineClients() []string {
 }
 
 func validateEmail(email string) (bool, error) {
+	
 	if strings.Contains(email, " ") {
 		return false, errors.New("email contains spaces, please remove them")
 	}
 
+	nonEnglishPattern := `[^\x00-\x7F]`
+	if regexp.MustCompile(nonEnglishPattern).MatchString(email) {
+		return false, errors.New("email contains non-English characters, please use only English")
+	}
+	
 	emailPattern := `^[a-zA-Z0-9@._-]+$`
 	if !regexp.MustCompile(emailPattern).MatchString(email) {
 		return false, errors.New("email contains invalid characters, please use only digits, dots, dashes, @, and underscores")
