@@ -985,12 +985,12 @@ RealityStreamSettings.Settings = class extends XrayCommonClass {
 class SockoptStreamSettings extends XrayCommonClass {
     constructor(
         acceptProxyProtocol = false,
-        tcpFastOpen = false,
+        tcpFastOpen = true,
         mark = 0,
         tproxy = "off",
-        tcpMptcp = false,
-        tcpNoDelay = false,
-        domainStrategy = DOMAIN_STRATEGY_OPTION.USE_IP,
+        tcpMptcp = true,
+        tcpNoDelay = true,
+        domainStrategy = DOMAIN_STRATEGY_OPTION.AS_IS,
         tcpMaxSeg = 1440,
         dialerProxy = "",
         tcpKeepAliveInterval = 0,
@@ -1187,7 +1187,7 @@ class Sniffing extends XrayCommonClass {
         enabled = true,
         destOverride = ['http', 'tls', 'quic', 'fakedns'],
         metadataOnly = false,
-        routeOnly = false) {
+        routeOnly = true) {
         super();
         this.enabled = enabled;
         this.destOverride = destOverride;
