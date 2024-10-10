@@ -66,6 +66,36 @@
       opacity: 1;
     }
   }
+  @keyframes wave {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .wave {
+    opacity: 0.6;
+    position: absolute;
+    bottom: 40%;
+    left: 50%;
+    width: 6000px;
+    height: 6000px;
+    background-color: rgba(0, 135, 113, 0.08);
+    margin-left: -3000px;
+    transform-origin: 50% 48%;
+    border-radius: 46%;
+    animation: wave 72s infinite linear;
+    pointer-events: none;
+  }
+  .wave2 {
+    animation: wave 88s infinite linear;
+    opacity: 0.3;
+  }
+  .wave3 {
+    animation: wave 80s infinite linear;
+    opacity: 0.1;
+  }
   .under {
     background-color: #33ccff;
     z-index: 0;
@@ -92,9 +122,9 @@
     border-color: #3366cc;
     background-image: linear-gradient(
       270deg,
-      rgba(123, 199, 77, 0) 30%,
+      rgba(123, 199, 255, 0) 30%,
       #0080ff,
-      rgba(123, 199, 77, 0) 100%
+      rgba(123, 199, 255, 0) 100%
     );
     background-repeat: no-repeat;
     animation: ma-bg-move ease-in-out 5s infinite;
@@ -134,10 +164,10 @@
     background-origin: border-box;
     background-clip: padding-box, border-box;
     background-size: 300%;
+    animation: wave-btn-tara 4s ease infinite;
     width: 100%;
     z-index: 1;
   }
-  .dark .wave-btn-bg:hover {animation: wave-btn-tara 4s ease infinite;}
   .dark .wave-btn-bg-cl {
     background-image: linear-gradient(rgba(13, 14, 33, 0), rgba(13, 14, 33, 0)),
       radial-gradient(circle at left top, #0066cc, #00ccff, #0066cc) !important;
@@ -393,9 +423,9 @@
               <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
             </defs>
             <g class="parallax">
-              <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(0, 135, 113, 0.08)" />
-              <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(0, 135, 113, 0.08)" />
-              <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(0, 135, 113, 0.08)" />
+              <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(0, 135, 233, 0.08)" />
+              <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(0, 135, 233, 0.08)" />
+              <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(0, 135, 233, 0.08)" />
               <use xlink:href="#gentle-wave" x="48" y="7" fill="#33ccff" />
             </g>
           </svg>
