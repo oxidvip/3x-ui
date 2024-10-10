@@ -203,7 +203,6 @@ Our platform offers compatibility with a diverse range of architectures and devi
 ## Languages
 
 - English
-- Farsi
 
 
 ## Features
