@@ -71,19 +71,11 @@
     overflow: hidden;
   }
   .online-animation .ant-badge-status-dot {
-    animation: onlineAnimation 1.2s linear infinite;
+    animation: 1.2s ease infinite normal none running onlineAnimation;
   }
   @keyframes onlineAnimation {
-    0%,
-    50%,
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    10% {
-      transform: scale(1.5);
-      opacity: .2;
-    }
+        0%, 50%, 100%   { transform: scale(1);  opacity:  1; }
+        10%             { transform: scale(1.5); opacity: .2; }
   }
   .tr-table-box {
     display: flex;
