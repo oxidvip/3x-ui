@@ -101,8 +101,9 @@ func (s *InboundService) getAllEmails() ([]string, error) {
 }
 
 func (s *InboundService) contains(slice []string, str string) bool {
+	lowerStr := strings.ToLower(str)
 	for _, s := range slice {
-		if s == str {
+		if strings.ToLower(s) == lowerStr {
 			return true
 		}
 	}
@@ -1049,8 +1050,12 @@ func (s *InboundService) disableInvalidInbounds(tx *gorm.DB) (bool, int64, error
 			if err1 == nil {
 				logger.Debug("Inbound disabled by api:", tag)
 			} else {
-				logger.Debug("Error in disabling inbound by api:", err1)
-				needRestart = true
+				if strings.Contains(err1.Error(), fmt.Sprintf("User %s not found.", tag)) {
+					logger.Debug("User is already disabled. Nothing to do more...")
+				} else {
+					logger.Debug("Error in disabling client by api:", err1)
+					needRestart = true
+				}
 			}
 		}
 		s.xrayApi.Close()
@@ -1088,8 +1093,13 @@ func (s *InboundService) disableInvalidClients(tx *gorm.DB) (bool, int64, error)
 			if err1 == nil {
 				logger.Debug("Client disabled by api:", result.Email)
 			} else {
-				logger.Debug("Error in disabling client by api:", err1)
-				needRestart = true
+				if strings.Contains(err1.Error(), fmt.Sprintf("User %s not found.", result.Email)) {
+					logger.Debug("User is already disabled. Nothing to do more...")
+				} else {
+					logger.Debug("Error in disabling client by api:", err1)
+					needRestart = true
+				
+				}
 			}
 		}
 		s.xrayApi.Close()
@@ -2027,7 +2037,7 @@ func validateEmail(email string) (bool, error) {
 	if strings.Contains(email, " ") {
 		return false, errors.New("email contains spaces, please remove them")
 	}
-
+	
 	nonEnglishPattern := `[^\x00-\x7F]`
 	if regexp.MustCompile(nonEnglishPattern).MatchString(email) {
 		return false, errors.New("email contains non-English characters, please use only English")
