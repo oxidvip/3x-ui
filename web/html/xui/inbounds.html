@@ -662,7 +662,7 @@
             onlineClients: [],
             isRefreshEnabled: localStorage.getItem("isRefreshEnabled") === "true" ? true : false,
             refreshing: false,
-            refreshInterval: Number(localStorage.getItem("refreshInterval")) || 5000,
+            refreshInterval: Number(localStorage.getItem("refreshInterval")) || 1000,
             subSettings: {
                 enable : false,
                 subURI : '',
@@ -692,7 +692,7 @@
                 this.setInbounds(msg.obj);
                 setTimeout(() => {
                     this.refreshing = false;
-                }, 500);
+                }, 100);
             },
             async getOnlineUsers() {
                 const msg = await HttpUtil.post('/panel/inbound/onlines');
