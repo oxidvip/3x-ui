@@ -71,10 +71,10 @@
           <a-progress :stroke-color="themeSwitcher.isDarkTheme ? 'rgb(72 84 105)' : '#bcbcbc'" :show-info="false" :percent="statsProgress(record, client.email)" />
         </td>
         <td class="tr-table-bar" v-else-if="client.totalGB > 0">
-          <a-progress :stroke-color="clientStatsColor(record, client.email)" :show-info="false" :status="isClientEnabled(record, client.email)? 'exception' : ''" :percent="statsProgress(record, client.email)" />
+          <a-progress :stroke-color="clientStatsColor(record, client.email)" :show-info="false" :status="isClientOnline(client.email)? 'active' : isClientEnabled(record, client.email)? 'exception' : ''" :percent="statsProgress(record, client.email)" />
         </td>
         <td v-else class="infinite-bar tr-table-bar">
-          <a-progress :show-info="false" :percent="100"></a-progress>
+          <a-progress :show-info="false" :status="isClientOnline(client.email)? 'active' : ''" :percent="100"></a-progress>
         </td>
         <td class="tr-table-lt">
           <template v-if="client.totalGB > 0">[[ client._totalGB + "GB" ]]</template>
@@ -103,7 +103,7 @@
         <tr class="tr-table-box">
           <td class="tr-table-rt"> [[ remainedDays(client.expiryTime) ]] </td>
           <td class="infinite-bar tr-table-bar">
-            <a-progress :show-info="false" :status="isClientEnabled(record, client.email)? 'exception' : ''" :percent="expireProgress(client.expiryTime, client.reset)" />
+            <a-progress :show-info="false" :status="isClientOnline(client.email)? 'active' : isClientEnabled(record, client.email)? 'exception' : ''" :percent="expireProgress(client.expiryTime, client.reset)" />
           </td>
           <td class="tr-table-lt">[[ client.reset + "d" ]]</td>
         </tr>
@@ -190,11 +190,11 @@
                   </tr>
                 </table>
               </template>
-              <a-progress :stroke-color="clientStatsColor(record, client.email)" :show-info="false" :status="isClientEnabled(record, client.email)? 'exception' : ''" :percent="statsProgress(record, client.email)" />
+              <a-progress :stroke-color="clientStatsColor(record, client.email)" :show-info="false" :status="isClientOnline(client.email)? 'active' : isClientEnabled(record, client.email)? 'exception' : ''" :percent="statsProgress(record, client.email)" />
             </a-popover>
           </td>
           <td width="120px" v-else class="infinite-bar">
-            <a-progress :stroke-color="themeSwitcher.isDarkTheme ? '#2c1e32':'#F2EAF1'" :show-info="false" :percent="100"></a-progress>
+            <a-progress :stroke-color="themeSwitcher.isDarkTheme ? '#2c1e32':'#F2EAF1'" :show-info="false" :status="isClientOnline(client.email)? 'active' : ''" :percent="100"></a-progress>
           </td>
           <td width="80px">
             <template v-if="client.totalGB > 0">[[ client._totalGB + "GB" ]]</template>
@@ -224,7 +224,7 @@
                     </template>
                   </span>
                 </template>
-                <a-progress :show-info="false" :status="isClientEnabled(record, client.email)? 'exception' : ''" :percent="expireProgress(client.expiryTime, client.reset)" />
+                <a-progress :show-info="false" :status="isClientOnline(client.email)? 'active' : isClientEnabled(record, client.email)? 'exception' : ''" :percent="expireProgress(client.expiryTime, client.reset)" />
               </a-popover>
             </td>
             <td width="60px">[[ client.reset + "d" ]]</td>
