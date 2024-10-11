@@ -4,11 +4,6 @@ const supportLangs = [
         value: 'en-US',
         icon: '🇺🇸',
     },
-    {
-        name: 'فارسی',
-        value: 'fa-IR',
-        icon: '🇮🇷',
-    },
 ];
 
 function getLang() {
