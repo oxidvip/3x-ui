@@ -14,13 +14,6 @@
 bash <(curl -Ls https://raw.githubusercontent.com/oxidvip/3x-ui/master/install.sh)
 ```
 
-## Install Custom Version
-
-To install your desired version, add the version to the end of the installation command. e.g., ver `v2.4.3`:
-
-```
-bash <(curl -Ls https://raw.githubusercontent.com/oxidvip/3x-ui/master/install.sh) v2.4.3
-```
 
 ## SSL Certificate
 
