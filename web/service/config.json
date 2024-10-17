@@ -30,7 +30,9 @@
       "tag": "direct",
       "protocol": "freedom",
       "settings": {
-        "domainStrategy": "ForceIPv4v6"
+        "domainStrategy": "ForceIPv4v6",
+        "redirect": "",
+        "noises": []
       }
     },
     {
