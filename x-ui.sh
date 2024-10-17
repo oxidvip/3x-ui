@@ -419,7 +419,6 @@ show_log() {
         journalctl -u x-ui -e --no-pager -f -p debug
         if [[ $# == 0 ]]; then
         before_show_menu
-    fi
         fi
         ;;
     2)
