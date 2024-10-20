@@ -181,7 +181,7 @@ update_menu() {
     fi
 }
 
-custom_version() {
+old_version() {
     echo "Enter the panel version (like 2.0.0):"
     read tag_version
 
@@ -220,6 +220,8 @@ uninstall() {
         return 0
     fi
     systemctl stop x-ui
+    rm -rf /etc/fail2ban
+    systemctl restart fail2ban
     systemctl disable x-ui
     rm /etc/systemd/system/x-ui.service -f
     systemctl daemon-reload
@@ -1430,7 +1432,7 @@ show_usage() {
     echo -e "x-ui log          - Check logs"
     echo -e "x-ui banlog       - Check Fail2ban ban logs"
     echo -e "x-ui update       - Update"
-    echo -e "x-ui custom       - custom version"
+    echo -e "x-ui old          - Old version"
     echo -e "x-ui install      - Install"
     echo -e "x-ui uninstall    - Uninstall"
     echo "------------------------------------------"
@@ -1444,7 +1446,7 @@ show_menu() {
   ${green}1.${plain} Install
   ${green}2.${plain} Update
   ${green}3.${plain} Update Menu
-  ${green}4.${plain} Custom Version
+  ${green}4.${plain} Old Version
   ${green}5.${plain} Uninstall
 ————————————————
   ${green}6.${plain} Reset Username & Password & Secret Token
