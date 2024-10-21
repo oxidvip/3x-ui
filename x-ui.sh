@@ -99,6 +99,7 @@ fi
 log_folder="${XUI_LOG_FOLDER:=/var/log}"
 iplimit_log_path="${log_folder}/3xipl.log"
 iplimit_banned_log_path="${log_folder}/3xipl-banned.log"
+iplimit_path="/etc/fail2ban/"
 
 confirm() {
     if [[ $# > 1 ]]; then
@@ -195,19 +196,11 @@ uninstall() {
         fi
         return 0
     fi
-    systemctl stop x-ui
-    systemctl disable x-ui
-    rm /etc/systemd/system/x-ui.service -f
-    systemctl daemon-reload
-    systemctl reset-failed
-    rm /etc/x-ui/ -rf
-    rm /usr/local/x-ui/ -rf
     
-    file_path="/etc/fail2ban"
-    if [ -f "$file_path" ]; then
-     rm -rf /etc/fail2ban
+    if [ -f "$iplimit_path" ]; then
         systemctl stop fail2ban
         systemctl disable fail2ban
+        rm -rf /etc/fail2ban
         case "${release}" in
         ubuntu | debian | armbian)
             apt-get remove -y fail2ban
@@ -228,7 +221,15 @@ uninstall() {
         esac
     systemctl daemon-reload
     fi
-        
+    
+    systemctl stop x-ui
+    systemctl disable x-ui
+    rm /etc/systemd/system/x-ui.service -f
+    systemctl daemon-reload
+    systemctl reset-failed
+    rm /etc/x-ui/ -rf
+    rm /usr/local/x-ui/ -rf
+    
     echo ""
     echo -e "Uninstalled Successfully.\n"
     echo "If you need to install this panel again, you can use below command:"
