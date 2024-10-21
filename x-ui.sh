@@ -227,7 +227,6 @@ uninstall() {
             ;;
         esac
     systemctl daemon-reload
-    else
     fi
         
     echo ""
