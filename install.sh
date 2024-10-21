@@ -213,7 +213,7 @@ install_x-ui() {
     else
         tag_version=$1
         tag_version_numeric=${tag_version#v}
-        min_version="1"
+        min_version="1.0.0"
 
         if [[ "$(printf '%s\n' "$min_version" "$tag_version_numeric" | sort -V | head -n1)" != "$min_version" ]]; then
             echo -e "${red}Please use latest version. Exiting installation.${plain}"
