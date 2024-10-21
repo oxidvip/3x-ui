@@ -225,8 +225,6 @@ uninstall() {
         arch | manjaro | parch)
             pacman -Rns --noconfirm fail2ban
             ;;
-            exit 1
-            ;;
         esac
     systemctl daemon-reload
     else
