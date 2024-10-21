@@ -210,8 +210,6 @@ install_x-ui() {
             echo -e "${red}Downloading x-ui failed, please be sure that your server can access GitHub ${plain}"
             exit 1
         fi
-    else
-    fi
 
     if [[ -e /usr/local/x-ui/ ]]; then
         systemctl stop x-ui
