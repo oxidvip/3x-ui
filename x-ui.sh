@@ -99,7 +99,7 @@ fi
 log_folder="${XUI_LOG_FOLDER:=/var/log}"
 iplimit_log_path="${log_folder}/3xipl.log"
 iplimit_banned_log_path="${log_folder}/3xipl-banned.log"
-iplimit_path="/etc/fail2ban/"
+iplimit_directory="/etc/fail2ban"
 
 confirm() {
     if [[ $# > 1 ]]; then
@@ -197,7 +197,7 @@ uninstall() {
         return 0
     fi
     
-    if [ -f "$iplimit_path" ]; then
+    if [ -d "$iplimit_directory" ]; then
         systemctl stop fail2ban
         systemctl disable fail2ban
         rm -rf /etc/fail2ban
@@ -220,8 +220,6 @@ uninstall() {
             ;;
         esac
     systemctl daemon-reload
-    fi
-    
     systemctl stop x-ui
     systemctl disable x-ui
     rm /etc/systemd/system/x-ui.service -f
@@ -229,6 +227,16 @@ uninstall() {
     systemctl reset-failed
     rm /etc/x-ui/ -rf
     rm /usr/local/x-ui/ -rf
+    else
+    if [ ! -d "$iplimit_directory" ]; then
+    systemctl stop x-ui
+    systemctl disable x-ui
+    rm /etc/systemd/system/x-ui.service -f
+    systemctl daemon-reload
+    systemctl reset-failed
+    rm /etc/x-ui/ -rf
+    rm /usr/local/x-ui/ -rf
+    fi
     
     echo ""
     echo -e "Uninstalled Successfully.\n"
