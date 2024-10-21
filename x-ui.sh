@@ -219,23 +219,23 @@ uninstall() {
             pacman -Rns --noconfirm fail2ban
             ;;
         esac
-    systemctl daemon-reload
-    systemctl stop x-ui
-    systemctl disable x-ui
-    rm /etc/systemd/system/x-ui.service -f
-    systemctl daemon-reload
-    systemctl reset-failed
-    rm /etc/x-ui/ -rf
-    rm /usr/local/x-ui/ -rf
+        systemctl daemon-reload
+        systemctl stop x-ui
+        systemctl disable x-ui
+        rm /etc/systemd/system/x-ui.service -f
+        systemctl daemon-reload
+        systemctl reset-failed
+        rm /etc/x-ui/ -rf
+        rm /usr/local/x-ui/ -rf
     else
     if [ ! -d "$iplimit_directory" ]; then
-    systemctl stop x-ui
-    systemctl disable x-ui
-    rm /etc/systemd/system/x-ui.service -f
-    systemctl daemon-reload
-    systemctl reset-failed
-    rm /etc/x-ui/ -rf
-    rm /usr/local/x-ui/ -rf
+        systemctl stop x-ui
+        systemctl disable x-ui
+        rm /etc/systemd/system/x-ui.service -f
+        systemctl daemon-reload
+        systemctl reset-failed
+        rm /etc/x-ui/ -rf
+        rm /usr/local/x-ui/ -rf
     fi
     fi
     
