@@ -211,20 +211,6 @@ install_x-ui() {
             exit 1
         fi
     else
-        tag_version=$1
-        tag_version_numeric=${tag_version#v}
-        min_version="2.4.3"
-        if [[ "$(printf '%s\n' "$min_version" "$tag_version_numeric" | sort -V | head -n1)" != "$min_version" ]]; then
-            echo -e "${red}Please use a newer version (at least v2.4.3). Exiting installation.${plain}"
-            exit 1
-        fi
-        url="https://github.com/oxidvip/3x-ui/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz"
-        echo -e "Beginning to install x-ui $1"
-        wget -N --no-check-certificate -O /usr/local/x-ui-linux-$(arch).tar.gz ${url}
-        if [[ $? -ne 0 ]]; then
-            echo -e "${red}Download x-ui $1 failed, please check version exists ${plain}"
-            exit 1
-        fi
     fi
 
     if [[ -e /usr/local/x-ui/ ]]; then
@@ -269,7 +255,6 @@ install_x-ui() {
     echo -e "x-ui log          - Check logs"
     echo -e "x-ui banlog       - Check Fail2ban ban logs"
     echo -e "x-ui update       - Update"
-    echo -e "x-ui custom       - custom version"
     echo -e "x-ui install      - Install"
     echo -e "x-ui uninstall    - Uninstall"
     echo -e "----------------------------------------------"
