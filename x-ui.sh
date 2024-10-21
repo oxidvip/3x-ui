@@ -1560,7 +1560,7 @@ show_menu() {
         run_speedtest
         ;;
     *)
-        LOGE "Please enter the correct number [0-24]"
+        LOGE "Please enter the correct number [0-23]"
         ;;
     esac
 }
