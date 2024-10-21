@@ -181,30 +181,6 @@ update_menu() {
     fi
 }
 
-old_version() {
-    echo "Enter the panel version (like 2.0.0):"
-    read tag_version
-
-    if [ -z "$tag_version" ]; then
-        echo "Panel version cannot be empty. Exiting."
-        exit 1
-    fi
-
-    min_version="2.4.3"
-    if [[ "$(printf '%s\n' "$tag_version" "$min_version" | sort -V | head -n1)" == "$tag_version" && "$tag_version" != "$min_version" ]]; then
-        echo "Please use a newer version (at least 2.4.3). Exiting."
-        exit 1
-    fi
-    
-    download_link="https://raw.githubusercontent.com/oxidvip/3x-ui/master/install.sh"
-
-    # Use the entered panel version in the download link
-    install_command="bash <(curl -Ls $download_link) v$tag_version"
-
-    echo "Downloading and installing panel version $tag_version..."
-    eval $install_command
-}
-
 # Function to handle the deletion of the script file
 delete_script() {
     rm "$0" # Remove the script file itself
@@ -220,15 +196,42 @@ uninstall() {
         return 0
     fi
     systemctl stop x-ui
-    rm -rf /etc/fail2ban
-    systemctl restart fail2ban
     systemctl disable x-ui
     rm /etc/systemd/system/x-ui.service -f
     systemctl daemon-reload
     systemctl reset-failed
     rm /etc/x-ui/ -rf
     rm /usr/local/x-ui/ -rf
-
+    
+    file_path="/etc/fail2ban"
+    if [ -f "$file_path" ]; then
+     rm -rf /etc/fail2ban
+        systemctl stop fail2ban
+        systemctl disable fail2ban
+        case "${release}" in
+        ubuntu | debian | armbian)
+            apt-get remove -y fail2ban
+            apt-get purge -y fail2ban -y
+            apt-get autoremove -y
+            ;;
+        centos | almalinux | rocky | oracle)
+            yum remove fail2ban -y
+            yum autoremove -y
+            ;;
+        fedora)
+            dnf remove fail2ban -y
+            dnf autoremove -y
+            ;;
+        arch | manjaro | parch)
+            pacman -Rns --noconfirm fail2ban
+            ;;
+            exit 1
+            ;;
+        esac
+    systemctl daemon-reload
+    else
+    fi
+        
     echo ""
     echo -e "Uninstalled Successfully.\n"
     echo "If you need to install this panel again, you can use below command:"
@@ -1381,6 +1384,7 @@ remove_iplimit() {
     2)
         rm -rf /etc/fail2ban
         systemctl stop fail2ban
+        systemctl disable fail2ban
         case "${release}" in
         ubuntu | debian | armbian)
             apt-get remove -y fail2ban
@@ -1403,6 +1407,7 @@ remove_iplimit() {
             exit 1
             ;;
         esac
+        systemctl daemon-reload
         echo -e "${green}Fail2ban and IP Limit removed successfully!${plain}\n"
         before_show_menu
         ;;
@@ -1432,7 +1437,6 @@ show_usage() {
     echo -e "x-ui log          - Check logs"
     echo -e "x-ui banlog       - Check Fail2ban ban logs"
     echo -e "x-ui update       - Update"
-    echo -e "x-ui old          - Old version"
     echo -e "x-ui install      - Install"
     echo -e "x-ui uninstall    - Uninstall"
     echo "------------------------------------------"
@@ -1446,35 +1450,34 @@ show_menu() {
   ${green}1.${plain} Install
   ${green}2.${plain} Update
   ${green}3.${plain} Update Menu
-  ${green}4.${plain} Old Version
-  ${green}5.${plain} Uninstall
+  ${green}4.${plain} Uninstall
 ————————————————
-  ${green}6.${plain} Reset Username & Password & Secret Token
-  ${green}7.${plain} Reset Web Base Path
-  ${green}8.${plain} Reset Settings
-  ${green}9.${plain} Change Port
-  ${green}10.${plain} View Current Settings
+  ${green}5.${plain} Reset Username & Password & Secret Token
+  ${green}6.${plain} Reset Web Base Path
+  ${green}7.${plain} Reset Settings
+  ${green}8.${plain} Change Port
+  ${green}9.${plain} View Current Settings
 ————————————————
-  ${green}11.${plain} Start
-  ${green}12.${plain} Stop
-  ${green}13.${plain} Restart
-  ${green}14.${plain} Check Status
-  ${green}15.${plain} Logs Management
+  ${green}10.${plain} Start
+  ${green}11.${plain} Stop
+  ${green}12.${plain} Restart
+  ${green}13.${plain} Check Status
+  ${green}14.${plain} Logs Management
 ————————————————
-  ${green}16.${plain} Enable Autostart
-  ${green}17.${plain} Disable Autostart
+  ${green}15.${plain} Enable Autostart
+  ${green}16.${plain} Disable Autostart
 ————————————————
-  ${green}18.${plain} SSL Certificate Management
-  ${green}19.${plain} Cloudflare SSL Certificate
-  ${green}20.${plain} IP Limit Management
-  ${green}21.${plain} Firewall Management
+  ${green}17.${plain} SSL Certificate Management
+  ${green}18.${plain} Cloudflare SSL Certificate
+  ${green}19.${plain} IP Limit Management
+  ${green}20.${plain} Firewall Management
 ————————————————
-  ${green}22.${plain} Enable BBR 
-  ${green}23.${plain} Update Geo Files
-  ${green}24.${plain} Speedtest by Ookla
+  ${green}21.${plain} Enable BBR 
+  ${green}22.${plain} Update Geo Files
+  ${green}23.${plain} Speedtest by Ookla
 "
     show_status
-    echo && read -p "Please enter your selection [0-24]: " num
+    echo && read -p "Please enter your selection [0-23]: " num
 
     case "${num}" in
     0)
@@ -1490,66 +1493,63 @@ show_menu() {
         check_install && update_menu
         ;;
     4)
-        check_install && custom_version
-        ;;
-    5)
         check_install && uninstall
         ;;
-    6)
+    5)
         check_install && reset_user
         ;;
-    7)
+    6)
         check_install && reset_webbasepath
         ;;
-    8)
+    7)
         check_install && reset_config
         ;;
-    9)
+    8)
         check_install && set_port
         ;;
-    10)
+    9)
         check_install && check_config
         ;;
-    11)
+    10)
         check_install && start
         ;;
-    12)
+    11)
         check_install && stop
         ;;
-    13)
+    12)
         check_install && restart
         ;;
-    14)
+    13)
         check_install && status
         ;;
-    15)
+    14)
         check_install && show_log
         ;;
-    16)
+    15)
         check_install && enable
         ;;
-    17)
+    16)
         check_install && disable
         ;;
-    18)
+    17)
         ssl_cert_issue_main
         ;;
-    19)
+    18)
         ssl_cert_issue_CF
         ;;
-    20)
+    19)
         iplimit_main
         ;;
-    21)
+    20)
         firewall_menu
         ;;
-    22)
+    21)
         bbr_menu
         ;;
-    23)
+    22)
         update_geo
         ;;
-    24)
+    23)
         run_speedtest
         ;;
     *)
@@ -1589,9 +1589,6 @@ if [[ $# > 0 ]]; then
         ;;
     "update")
         check_install 0 && update 0
-        ;;
-    "custom")
-        check_install 0 && custom_version 0
         ;;
     "install")
         check_uninstall 0 && install 0
