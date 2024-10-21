@@ -210,6 +210,23 @@ install_x-ui() {
             echo -e "${red}Downloading x-ui failed, please be sure that your server can access GitHub ${plain}"
             exit 1
         fi
+    else
+        tag_version=$1
+        tag_version_numeric=${tag_version#v}
+        min_version="1"
+
+        if [[ "$(printf '%s\n' "$min_version" "$tag_version_numeric" | sort -V | head -n1)" != "$min_version" ]]; then
+            echo -e "${red}Please use latest version. Exiting installation.${plain}"
+            exit 1
+        fi
+
+        url="https://github.com/oxidvip/3x-ui/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz"
+        echo -e "Beginning to install x-ui $1"
+        wget -N --no-check-certificate -O /usr/local/x-ui-linux-$(arch).tar.gz ${url}
+        if [[ $? -ne 0 ]]; then
+            echo -e "${red}Download x-ui $1 failed, please check if the version exists ${plain}"
+            exit 1
+        fi
     fi
 
     if [[ -e /usr/local/x-ui/ ]]; then
