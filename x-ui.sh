@@ -237,6 +237,7 @@ uninstall() {
     rm /etc/x-ui/ -rf
     rm /usr/local/x-ui/ -rf
     fi
+    fi
     
     echo ""
     echo -e "Uninstalled Successfully.\n"
