@@ -248,28 +248,30 @@ func (s *ServerService) GetStatus(lastStatus *Status) *Status {
 }
 
 func (s *ServerService) GetXrayVersions() ([]string, error) {
-	url := "https://api.github.com/repos/XTLS/Xray-core/releases"
-	resp, err := http.Get(url)
+	const (
+		XrayURL    = "https://api.github.com/repos/XTLS/Xray-core/releases"
+		bufferSize = 8192
+	)
+	resp, err := http.Get(XrayURL)
 	if err != nil {
 		return nil, err
 	}
-
 	defer resp.Body.Close()
-	buffer := bytes.NewBuffer(make([]byte, 8192))
+	
+	buffer := bytes.NewBuffer(make([]byte, bufferSize))
 	buffer.Reset()
-	_, err = buffer.ReadFrom(resp.Body)
-	if err != nil {
+	if _, err := buffer.ReadFrom(resp.Body); err != nil {
 		return nil, err
 	}
 
-	releases := make([]Release, 0)
-	err = json.Unmarshal(buffer.Bytes(), &releases)
-	if err != nil {
+	var releases []Release
+	if err := json.Unmarshal(buffer.Bytes(), &releases); err != nil {
 		return nil, err
 	}
+	
 	var versions []string
 	for _, release := range releases {
-		if release.TagName >= "v1.7.5" {
+		if release.TagName >= "v1.8.24" {
 			versions = append(versions, release.TagName)
 		}
 	}
