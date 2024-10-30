@@ -330,7 +330,6 @@
                 <template v-if="dbInbound.isVMess || dbInbound.isVLess || dbInbound.isTrojan || dbInbound.isSS">
                   <a-tag style="margin:0;" color="blue">[[ dbInbound.toInbound().stream.network ]]</a-tag>
                   <a-tag style="margin:0;" v-if="dbInbound.toInbound().stream.isTls" color="green">TLS</a-tag>
-                  <a-tag style="margin:0;" v-if="dbInbound.toInbound().stream.isXtls" color="green">XTLS</a-tag>
                   <a-tag style="margin:0;" v-if="dbInbound.toInbound().stream.isReality" color="green">Reality</a-tag>
                 </template>
               </template>
