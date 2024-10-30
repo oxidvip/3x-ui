@@ -132,6 +132,9 @@ config_after_install() {
     local existing_username=$(/usr/local/x-ui/x-ui setting -show true | grep -Eo 'username: .+' | awk '{print $2}')
     local existing_password=$(/usr/local/x-ui/x-ui setting -show true | grep -Eo 'password: .+' | awk '{print $2}')
     local existing_webBasePath=$(/usr/local/x-ui/x-ui setting -show true | grep -Eo 'webBasePath: .+' | awk '{print $2}')
+    local existing_port=$(/usr/local/x-ui/x-ui setting -show true | grep -Eo 'port: .+' | awk '{print $2}')
+    local server_ip=$(curl -s https://api.ipify.org)
+    
     # Check if username and password exist
     if [[ -n "$existing_username" && -n "$existing_password" ]]; then
         # If webBasePath is missing, generate a new one
@@ -147,7 +150,7 @@ config_after_install() {
         return 0
     fi
     
-    read -p "Would you like to customize the Panel Port settings? (If not, random settings will be applied) [y/n]: " config_confirm
+    read -p "Would you like to customize the Panel Port settings? (If not, a random port will be applied) [y/n]: " config_confirm
  
     local config_webBasePath=$(gen_random_string 15)
     local config_username=$(gen_random_string 10)
