@@ -105,11 +105,6 @@
     </template>
   </template>
 
-  <!-- xtls settings -->
-  <template v-else-if="inbound.stream.isXtls">
-    {{template "form/xtlsSettings"}}
-  </template>
-
   <!-- reality settings -->
   <template v-if="inbound.stream.isReality">
     {{template "form/realitySettings"}}
