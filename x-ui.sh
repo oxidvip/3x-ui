@@ -208,11 +208,6 @@ uninstall() {
             systemctl reset-failed
             rm /etc/x-ui/ -rf
             rm /usr/local/x-ui/ -rf
-            echo ""
-            echo -e "Uninstalled Successfully.\n"
-            echo "If you need to install this panel again, you can use below command:"
-            echo -e "${green}bash <(curl -Ls https://raw.githubusercontent.com/oxidvip/3x-ui/master/install.sh)${plain}"
-            echo ""
         fi
         return 0
     fi
