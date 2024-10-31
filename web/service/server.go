@@ -271,7 +271,20 @@ func (s *ServerService) GetXrayVersions() ([]string, error) {
 	
 	var versions []string
 	for _, release := range releases {
-		if release.TagName >= "v1.8.24" {
+		tagVersion := strings.TrimPrefix(release.TagName, "v")
+		tagParts := strings.Split(tagVersion, ".")
+		if len(tagParts) != 3 {
+			continue
+		}
+		major, err1 := strconv.Atoi(tagParts[0])
+		minor, err2 := strconv.Atoi(tagParts[1])
+		patch, err3 := strconv.Atoi(tagParts[2])
+		if err1 != nil || err2 != nil || err3 != nil {
+			continue
+		}
+		if (major == 1 && minor == 8 && patch == 24) ||
+			(major == 24 && ((minor > 9) || (minor == 9 && patch >= 30))) ||
+			(major > 24) {
 			versions = append(versions, release.TagName)
 		}
 	}
