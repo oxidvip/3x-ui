@@ -201,7 +201,13 @@ uninstall() {
     confirm "Fail2ban installed, Are you sure about remove it?" "n"
     if [[ $? != 0 ]]; then
         if [[ $# == 0 ]]; then
-            show_menu
+            systemctl stop x-ui
+            systemctl disable x-ui
+            rm /etc/systemd/system/x-ui.service -f
+            systemctl daemon-reload
+            systemctl reset-failed
+            rm /etc/x-ui/ -rf
+            rm /usr/local/x-ui/ -rf 
         fi
         return 0
     fi
