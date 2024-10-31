@@ -326,7 +326,6 @@ check_config() {
 
     local existing_webBasePath=$(echo "$info" | grep -Eo 'webBasePath: .+' | awk '{print $2}')
     local existing_port=$(echo "$info" | grep -Eo 'port: .+' | awk '{print $2}')
-    local server_ip=$(curl -s https://api.ipify.org)
 }
 
 set_port() {
