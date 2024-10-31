@@ -749,6 +749,68 @@ TlsStreamSettings.Settings = class extends XrayCommonClass {
     }
 };
 
+class RealityStreamSettings extends XrayCommonClass {
+    constructor(
+        show = false,
+        xver = 0,
+        dest = 'yahoo.com:443',
+        serverNames = 'yahoo.com,www.yahoo.com',
+        privateKey = '',
+        minClient = '',
+        maxClient = '',
+        maxTimediff = 0,
+        shortIds = RandomUtil.randomShortIds(),
+        settings = new RealityStreamSettings.Settings()
+    ) {
+        super();
+        this.show = show;
+        this.xver = xver;
+        this.dest = dest;
+        this.serverNames = Array.isArray(serverNames) ? serverNames.join(",") : serverNames;
+        this.privateKey = privateKey;
+        this.minClient = minClient;
+        this.maxClient = maxClient;
+        this.maxTimediff = maxTimediff;
+        this.shortIds = Array.isArray(shortIds) ? shortIds.join(",") : shortIds; 
+        this.settings = settings;
+    }
+    static fromJson(json = {}) {
+        let settings;
+        if (!ObjectUtil.isEmpty(json.settings)) {
+            settings = new RealityStreamSettings.Settings(
+                json.settings.publicKey,
+                json.settings.fingerprint,
+                json.settings.serverName,
+                json.settings.spiderX);}
+        return new RealityStreamSettings(
+            json.show,
+            json.xver,
+            json.dest,
+            json.serverNames,
+            json.privateKey,
+            json.minClient,
+            json.maxClient,
+            json.maxTimediff,
+            json.shortIds,
+            json.settings,
+        );
+    }
+    toJson() {
+        return {
+            show: this.show,
+            xver: this.xver,
+            dest: this.dest,
+            serverNames: this.serverNames.split(","),
+            privateKey: this.privateKey,
+            minClient: this.minClient,
+            maxClient: this.maxClient,
+            maxTimediff: this.maxTimediff,
+            shortIds: this.shortIds.split(","),
+            settings: this.settings,
+        };
+    }
+}
+
 RealityStreamSettings.Settings = class extends XrayCommonClass {
     constructor(
         publicKey = '',
