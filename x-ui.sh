@@ -457,15 +457,32 @@ show_log() {
 }
 
 show_banlog() {
-    if test -f "${iplimit_banned_log_path}"; then
+    local system_log="/var/log/fail2ban.log"
+    
+    echo -e "${green}Checking ban logs...${plain}\n"
+    
+    if ! systemctl is-active --quiet fail2ban; then
+        echo -e "${red}Fail2ban service is not running!${plain}\n"
+        return 1
+    fi
+    if [[ -f "$system_log" ]]; then
+        echo -e "${green}Recent system ban activities from fail2ban.log:${plain}"
+        grep "3x-ipl" "$system_log" | grep -E "Ban|Unban" | tail -n 10 || echo -e "${yellow}No recent system ban activities found${plain}"
+        echo ""
+    fi
+    if [[ -f "${iplimit_banned_log_path}" ]]; then
+        echo -e "${green}3X-IPL ban log entries:${plain}"
         if [[ -s "${iplimit_banned_log_path}" ]]; then
-            cat ${iplimit_banned_log_path}
+            grep -v "INIT" "${iplimit_banned_log_path}" | tail -n 10 || echo -e "${yellow}No ban entries found${plain}"
         else
-            echo -e "${red}Log file is empty.${plain}\n"
+            echo -e "${yellow}Ban log file is empty${plain}"
         fi
     else
-        echo -e "${red}Log file not found. Please Install Fail2ban and IP Limit first.${plain}\n"
+        echo -e "${red}Ban log file not found at: ${iplimit_banned_log_path}${plain}"
     fi
+
+    echo -e "\n${green}Current jail status:${plain}"
+    fail2ban-client status 3x-ipl || echo -e "${yellow}Unable to get jail status${plain}"
 }
 
 bbr_menu() {
@@ -670,15 +687,19 @@ firewall_menu() {
         ;;
     1)
         open_ports
+        firewall_menu
         ;;
     2)
         sudo ufw status
+        firewall_menu
         ;;
     3)
         delete_ports
+        firewall_menu
         ;;
     4)
         sudo ufw disable
+        firewall_menu
         ;;
     *) echo "Invalid choice" ;;
     esac
@@ -797,12 +818,16 @@ update_geo() {
         wget -N https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
         wget -N https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
         echo -e "${green}Loyalsoldier datasets have been updated successfully!${plain}"
+        restart
+        update_geo
         ;;
     2)
         rm -f geoip_IR.dat geosite_IR.dat geoip_VN.dat geosite_VN.dat
         wget -O geoip_IR.dat -N https://github.com/chocolate4u/Iran-v2ray-rules/releases/latest/download/geoip.dat
         wget -O geosite_IR.dat -N https://github.com/chocolate4u/Iran-v2ray-rules/releases/latest/download/geosite.dat
         echo -e "${green}chocolate4u datasets have been updated successfully!${plain}"
+        restart
+        update_geo
         ;;
     *)
         echo "Invalid option selected! No updates made."
@@ -847,6 +872,7 @@ ssl_cert_issue_main() {
         ;;
     1)
         ssl_cert_issue
+        ssl_cert_issue_main
         ;;
     2)
         # Auto-detect existing domains for revoking
@@ -864,6 +890,7 @@ ssl_cert_issue_main() {
                 echo "Invalid domain entered."
             fi
         fi
+        ssl_cert_issue_main
         ;;
     3)
         # Auto-detect existing domains for force renewal
@@ -881,6 +908,7 @@ ssl_cert_issue_main() {
                 echo "Invalid domain entered."
             fi
         fi
+        ssl_cert_issue_main
         ;;
     4)
         # Show existing certificate paths for all domains
@@ -901,6 +929,7 @@ ssl_cert_issue_main() {
                 fi
             done
         fi
+        ssl_cert_issue_main
         ;;
     5)
         # Set Cert paths for the panel
@@ -930,6 +959,7 @@ ssl_cert_issue_main() {
                 echo "Invalid domain entered."
             fi
         fi
+        ssl_cert_issue_main
         ;;
         
     *)
@@ -1303,18 +1333,23 @@ iplimit_main() {
         ;;
     4)
         show_banlog
+        iplimit_main
         ;;
     5)
         tail -f /var/log/fail2ban.log
+        iplimit_main
         ;;
     6)
         service fail2ban status
+        iplimit_main
         ;;
     7)
         systemctl restart fail2ban
+        iplimit_main
         ;;
     8)
         remove_iplimit
+        iplimit_main
         ;;
     *) echo "Invalid choice" ;;
     esac
