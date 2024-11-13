@@ -172,6 +172,7 @@ location /sub {
 - Rocky Linux 9+
 - Oracle Linux 8+
 - OpenSUSE Tubleweed
+- Windows x64
 
 ## Supported Architectures and Devices
 
