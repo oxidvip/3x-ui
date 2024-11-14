@@ -77,6 +77,12 @@ const USERS_SECURITY = {
     ZERO: "zero",
 };
 
+const MODE_OPTION = {
+    AUTO: "auto",
+    PACKET_UP: "packet-up",
+    STREAM_UP: "stream-up",
+};
+
 Object.freeze(Protocols);
 Object.freeze(SSMethods);
 Object.freeze(TLS_FLOW_CONTROL);
@@ -85,6 +91,7 @@ Object.freeze(ALPN_OPTION);
 Object.freeze(OutboundDomainStrategies);
 Object.freeze(WireguardDomainStrategy);
 Object.freeze(USERS_SECURITY);
+Object.freeze(MODE_OPTION);
 
 
 class CommonClass {
@@ -241,37 +248,6 @@ class HttpStreamSettings extends CommonClass {
     }
 }
 
-class QuicStreamSettings extends CommonClass {
-    constructor(
-        security = 'none',
-        key = '',
-        type = 'none'
-    ) {
-        super();
-        this.security = security;
-        this.key = key;
-        this.type = type;
-    }
-
-    static fromJson(json = {}) {
-        return new QuicStreamSettings(
-            json.security,
-            json.key,
-            json.header ? json.header.type : 'none',
-        );
-    }
-
-    toJson() {
-        return {
-            security: this.security,
-            key: this.key,
-            header: {
-                type: this.type,
-            }
-        }
-    }
-}
-
 class GrpcStreamSettings extends CommonClass {
     constructor(
         serviceName = "",
@@ -320,16 +296,22 @@ class HttpUpgradeStreamSettings extends CommonClass {
 }
 
 class SplitHTTPStreamSettings extends CommonClass {
-    constructor(path = '/', host = '') {
+    constructor(
+        path = '/',
+        host = '',
+        mode = '',
+    ) {
         super();
         this.path = path;
         this.host = host;
+        this.mode = mode;
     }
 
     static fromJson(json = {}) {
         return new SplitHTTPStreamSettings(
             json.path,
             json.host,
+            json.mode,
         );
     }
 
@@ -337,6 +319,7 @@ class SplitHTTPStreamSettings extends CommonClass {
         return {
             path: this.path,
             host: this.host,
+            mode: this.mode,
         };
     }
 }
@@ -460,7 +443,6 @@ class StreamSettings extends CommonClass {
         kcpSettings = new KcpStreamSettings(),
         wsSettings = new WsStreamSettings(),
         httpSettings = new HttpStreamSettings(),
-        quicSettings = new QuicStreamSettings(),
         grpcSettings = new GrpcStreamSettings(),
         httpupgradeSettings = new HttpUpgradeStreamSettings(),
         splithttpSettings = new SplitHTTPStreamSettings(),
@@ -507,7 +489,6 @@ class StreamSettings extends CommonClass {
             KcpStreamSettings.fromJson(json.kcpSettings),
             WsStreamSettings.fromJson(json.wsSettings),
             HttpStreamSettings.fromJson(json.httpSettings),
-            QuicStreamSettings.fromJson(json.quicSettings),
             GrpcStreamSettings.fromJson(json.grpcSettings),
             HttpUpgradeStreamSettings.fromJson(json.httpupgradeSettings),
             SplitHTTPStreamSettings.fromJson(json.splithttpSettings),
@@ -714,7 +695,7 @@ class Outbound extends CommonClass {
         } else if (network === 'httpupgrade') {
             stream.httpupgrade = new HttpUpgradeStreamSettings(json.path, json.host);
         } else if (network === 'splithttp') {
-            stream.splithttp = new SplitHTTPStreamSettings(json.path, json.host);
+            stream.splithttp = new SplitHTTPStreamSettings(json.path, json.host, json.mode);
         }
 
         if (json.tls && json.tls == 'tls') {
@@ -758,7 +739,7 @@ class Outbound extends CommonClass {
         } else if (type === 'httpupgrade') {
             stream.httpupgrade = new HttpUpgradeStreamSettings(path, host);
         } else if (type === 'splithttp') {
-            stream.splithttp = new SplitHTTPStreamSettings(path, host);
+            stream.splithttp = new SplitHTTPStreamSettings(path, host, mode);
         }
 
         if (security == 'tls') {
