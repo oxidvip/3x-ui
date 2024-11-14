@@ -398,7 +398,6 @@ Enter the user ID in input field number 4. The Telegram accounts with this id wi
 - `client.password` for TROJAN
 - `client.email` for Shadowsocks
 
-
 ## Environment Variables
 
 <details>
