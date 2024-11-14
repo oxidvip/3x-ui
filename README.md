@@ -360,7 +360,6 @@ Enter the user ID in input field number 4. The Telegram accounts with this id wi
 
 </details>
 
-
 ## API Routes
 
 <details>
@@ -421,7 +420,6 @@ XUI_BIN_FOLDER="bin" XUI_DB_FOLDER="/etc/x-ui" go build main.go
 ```
 
 </details>
-
 
 ## A Special Thanks to
 
