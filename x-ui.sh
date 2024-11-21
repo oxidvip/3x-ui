@@ -485,88 +485,6 @@ show_banlog() {
     fail2ban-client status 3x-ipl || echo -e "${yellow}Unable to get jail status${plain}"
 }
 
-bbr_menu() {
-    echo -e "${green}\t1.${plain} Enable BBR"
-    echo -e "${green}\t2.${plain} Disable BBR"
-    echo -e "${green}\t0.${plain} Back to Main Menu"
-    read -p "Choose an option: " choice
-    case "$choice" in
-    0)
-        show_menu
-        ;;
-    1)
-        enable_bbr
-        ;;
-    2)
-        disable_bbr
-        ;;
-    *) echo "Invalid choice" ;;
-    esac
-}
-
-disable_bbr() {
-
-    if ! grep -q "net.core.default_qdisc=fq" /etc/sysctl.conf || ! grep -q "net.ipv4.tcp_congestion_control=bbr" /etc/sysctl.conf; then
-        echo -e "${yellow}BBR is not currently enabled.${plain}"
-        exit 0
-    fi
-
-    # Replace BBR with CUBIC configurations
-    sed -i 's/net.core.default_qdisc=fq/net.core.default_qdisc=pfifo_fast/' /etc/sysctl.conf
-    sed -i 's/net.ipv4.tcp_congestion_control=bbr/net.ipv4.tcp_congestion_control=cubic/' /etc/sysctl.conf
-
-    # Apply changes
-    sysctl -p
-
-    # Verify that BBR is replaced with CUBIC
-    if [[ $(sysctl net.ipv4.tcp_congestion_control | awk '{print $3}') == "cubic" ]]; then
-        echo -e "${green}BBR has been replaced with CUBIC successfully.${plain}"
-    else
-        echo -e "${red}Failed to replace BBR with CUBIC. Please check your system configuration.${plain}"
-    fi
-}
-
-enable_bbr() {
-    if grep -q "net.core.default_qdisc=fq" /etc/sysctl.conf && grep -q "net.ipv4.tcp_congestion_control=bbr" /etc/sysctl.conf; then
-        echo -e "${green}BBR is already enabled!${plain}"
-        exit 0
-    fi
-
-    # Check the OS and install necessary packages
-    case "${release}" in
-    ubuntu | debian | armbian)
-        apt-get update && apt-get install -yqq --no-install-recommends ca-certificates
-        ;;
-    centos | almalinux | rocky | oracle)
-        yum -y update && yum -y install ca-certificates
-        ;;
-    fedora)
-        dnf -y update && dnf -y install ca-certificates
-        ;;
-    arch | manjaro | parch)
-        pacman -Sy --noconfirm ca-certificates
-        ;;
-    *)
-        echo -e "${red}Unsupported operating system. Please check the script and install the necessary packages manually.${plain}\n"
-        exit 1
-        ;;
-    esac
-
-    # Enable BBR
-    echo "net.core.default_qdisc=fq" | tee -a /etc/sysctl.conf
-    echo "net.ipv4.tcp_congestion_control=bbr" | tee -a /etc/sysctl.conf
-
-    # Apply changes
-    sysctl -p
-
-    # Verify that BBR is enabled
-    if [[ $(sysctl net.ipv4.tcp_congestion_control | awk '{print $3}') == "bbr" ]]; then
-        echo -e "${green}BBR has been enabled successfully.${plain}"
-    else
-        echo -e "${red}Failed to enable BBR. Please check your system configuration.${plain}"
-    fi
-}
-
 update_shell() {
     wget -O /usr/bin/x-ui -N --no-check-certificate https://github.com/oxidvip/3x-ui/raw/main/x-ui.sh
     if [[ $? != 0 ]]; then
@@ -674,133 +592,6 @@ show_xray_status() {
     fi
 }
 
-firewall_menu() {
-    echo -e "${green}\t1.${plain} Install Firewall & open ports"
-    echo -e "${green}\t2.${plain} Allowed List"
-    echo -e "${green}\t3.${plain} Delete Ports from List"
-    echo -e "${green}\t4.${plain} Disable Firewall"
-    echo -e "${green}\t0.${plain} Back to Main Menu"
-    read -p "Choose an option: " choice
-    case "$choice" in
-    0)
-        show_menu
-        ;;
-    1)
-        open_ports
-        firewall_menu
-        ;;
-    2)
-        sudo ufw status
-        firewall_menu
-        ;;
-    3)
-        delete_ports
-        firewall_menu
-        ;;
-    4)
-        sudo ufw disable
-        firewall_menu
-        ;;
-    *) echo "Invalid choice" ;;
-    esac
-}
-
-open_ports() {
-    if ! command -v ufw &>/dev/null; then
-        echo "ufw firewall is not installed. Installing now..."
-        apt-get update
-        apt-get install -y ufw
-    else
-        echo "ufw firewall is already installed"
-    fi
-
-    # Check if the firewall is inactive
-    if ufw status | grep -q "Status: active"; then
-        echo "Firewall is already active"
-    else
-        echo "Activating firewall..."
-        # Open the necessary ports
-        ufw allow ssh
-        ufw allow http
-        ufw allow https
-        ufw allow 2053/tcp
-
-        # Enable the firewall
-        ufw --force enable
-    fi
-
-    # Prompt the user to enter a list of ports
-    read -p "Enter the ports you want to open (e.g. 80,443,2053 or range 400-500): " ports
-
-    # Check if the input is valid
-    if ! [[ $ports =~ ^([0-9]+|[0-9]+-[0-9]+)(,([0-9]+|[0-9]+-[0-9]+))*$ ]]; then
-        echo "Error: Invalid input. Please enter a comma-separated list of ports or a range of ports (e.g. 80,443,2053 or 400-500)." >&2
-        exit 1
-    fi
-
-    # Open the specified ports using ufw
-    IFS=',' read -ra PORT_LIST <<<"$ports"
-    for port in "${PORT_LIST[@]}"; do
-        if [[ $port == *-* ]]; then
-            # Split the range into start and end ports
-            start_port=$(echo $port | cut -d'-' -f1)
-            end_port=$(echo $port | cut -d'-' -f2)
-            ufw allow $start_port:$end_port/tcp
-            ufw allow $start_port:$end_port/udp
-        else
-            ufw allow "$port"
-        fi
-    done
-
-    # Confirm that the ports are open
-    echo "The following ports are now open:"
-    ufw status | grep "ALLOW" | grep -Eo "[0-9]+(/[a-z]+)?"
-
-    echo "Firewall status:"
-    ufw status verbose
-}
-
-delete_ports() {
-    # Prompt the user to enter the ports they want to delete
-    read -p "Enter the ports you want to delete (e.g. 80,443,2053 or range 400-500): " ports
-
-    # Check if the input is valid
-    if ! [[ $ports =~ ^([0-9]+|[0-9]+-[0-9]+)(,([0-9]+|[0-9]+-[0-9]+))*$ ]]; then
-        echo "Error: Invalid input. Please enter a comma-separated list of ports or a range of ports (e.g. 80,443,2053 or 400-500)." >&2
-        exit 1
-    fi
-
-    # Delete the specified ports using ufw
-    IFS=',' read -ra PORT_LIST <<<"$ports"
-    for port in "${PORT_LIST[@]}"; do
-        if [[ $port == *-* ]]; then
-            # Split the range into start and end ports
-            start_port=$(echo $port | cut -d'-' -f1)
-            end_port=$(echo $port | cut -d'-' -f2)
-            # Delete the port range
-            ufw delete allow $start_port:$end_port/tcp
-            ufw delete allow $start_port:$end_port/udp
-        else
-            ufw delete allow "$port"
-        fi
-    done
-
-    # Confirm that the ports are deleted
-    
-    echo "Deleted the specified ports:"
-    for port in "${PORT_LIST[@]}"; do
-        if [[ $port == *-* ]]; then
-            start_port=$(echo $port | cut -d'-' -f1)
-            end_port=$(echo $port | cut -d'-' -f2)
-            # Check if the port range has been successfully deleted
-            (ufw status | grep -q "$start_port:$end_port") || echo "$start_port-$end_port"
-        else
-            # Check if the individual port has been successfully deleted
-            (ufw status | grep -q "$port") || echo "$port"
-        fi
-    done
-}
-
 update_geo() {
     echo -e "${green}\t1.${plain} Loyalsoldier (geoip.dat, geosite.dat)"
     echo -e "${green}\t2.${plain} chocolate4u (geoip_IR.dat, geosite_IR.dat)"
@@ -858,7 +649,7 @@ install_acme() {
 }
 
 ssl_cert_issue_main() {
-    echo -e "${green}\t1.${plain} Get SSL"
+    echo -e "${green}\t1.${plain} Get SSL (Port:80)"
     echo -e "${green}\t2.${plain} Revoke"
     echo -e "${green}\t3.${plain} Force Renew"
     echo -e "${green}\t4.${plain} Show Existing Domains"
@@ -1029,19 +820,10 @@ ssl_cert_issue() {
         rm -rf "$certPath"
         mkdir -p "$certPath"
     fi
-
-    # get the port number for the standalone server
-    local WebPort=80
-    read -p "Please choose which port to use (default is 80): " WebPort
-    if [[ ${WebPort} -gt 65535 || ${WebPort} -lt 1 ]]; then
-        LOGE "Your input ${WebPort} is invalid, will use default port 80."
-        WebPort=80
-    fi
-    LOGI "Will use port: ${WebPort} to issue certificates. Please make sure this port is open."
     
     # issue the certificate
     ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-    ~/.acme.sh/acme.sh --issue -d ${domain} --listen-v6 --standalone --httpport ${WebPort}
+    ~/.acme.sh/acme.sh --issue -d ${domain} --listen-v6 --standalone --httpport 80
     if [ $? -ne 0 ]; then
         LOGE "Issuing certificate failed, please check logs."
         rm -rf ~/.acme.sh/${domain}
@@ -1095,40 +877,6 @@ ssl_cert_issue() {
     else
         LOGI "Skipping panel path setting."
     fi
-}
-
-run_speedtest() {
-    # Check if Speedtest is already installed
-    if ! command -v speedtest &>/dev/null; then
-        # If not installed, install it
-        local pkg_manager=""
-        local speedtest_install_script=""
-
-        if command -v dnf &>/dev/null; then
-            pkg_manager="dnf"
-            speedtest_install_script="https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.rpm.sh"
-        elif command -v yum &>/dev/null; then
-            pkg_manager="yum"
-            speedtest_install_script="https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.rpm.sh"
-        elif command -v apt-get &>/dev/null; then
-            pkg_manager="apt-get"
-            speedtest_install_script="https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh"
-        elif command -v apt &>/dev/null; then
-            pkg_manager="apt"
-            speedtest_install_script="https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh"
-        fi
-
-        if [[ -z $pkg_manager ]]; then
-            echo "Error: Package manager not found. You may need to install Speedtest manually."
-            return 1
-        else
-            curl -s $speedtest_install_script | bash
-            $pkg_manager install -y speedtest
-        fi
-    fi
-
-    # Run Speedtest
-    speedtest
 }
 
 create_iplimit_jails() {
@@ -1454,14 +1202,10 @@ show_menu() {
 ————————————————
   ${green}17.${plain} SSL Certificate Management
   ${green}18.${plain} IP Limit Management
-  ${green}19.${plain} Firewall Management
-————————————————
-  ${green}20.${plain} Enable BBR 
-  ${green}21.${plain} Update Geo Files
-  ${green}22.${plain} Speedtest by Ookla
+  ${green}19.${plain} Update Geo Files
 "
     show_status
-    echo && read -p "Please enter your selection [0-22]: " num
+    echo && read -p "Please enter your selection [0-19]: " num
 
     case "${num}" in
     0)
@@ -1522,19 +1266,10 @@ show_menu() {
         iplimit_main
         ;;
     19)
-        firewall_menu
-        ;;
-    20)
-        bbr_menu
-        ;;
-    21)
         update_geo
         ;;
-    22)
-        run_speedtest
-        ;;
     *)
-        LOGE "Please enter the correct number [0-22]"
+        LOGE "Please enter the correct number [0-19]"
         ;;
     esac
 }
