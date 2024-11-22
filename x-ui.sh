@@ -592,43 +592,6 @@ show_xray_status() {
     fi
 }
 
-update_geo() {
-    echo -e "${green}\t1.${plain} Loyalsoldier (geoip.dat, geosite.dat)"
-    echo -e "${green}\t2.${plain} chocolate4u (geoip_IR.dat, geosite_IR.dat)"
-    echo -e "${green}\t0.${plain} Back to Main Menu"
-    read -p "Choose an option: " choice
-    
-    systemctl stop x-ui
-    cd /usr/local/x-ui/bin
-    case "$choice" in
-    0)
-        show_menu
-        ;;
-    1)
-        rm -f geoip.dat geosite.dat geoip_VN.dat geosite_VN.dat
-        wget -N https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
-        wget -N https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
-        echo -e "${green}Loyalsoldier datasets have been updated successfully!${plain}"
-        restart
-        update_geo
-        ;;
-    2)
-        rm -f geoip_IR.dat geosite_IR.dat geoip_VN.dat geosite_VN.dat
-        wget -O geoip_IR.dat -N https://github.com/chocolate4u/Iran-v2ray-rules/releases/latest/download/geoip.dat
-        wget -O geosite_IR.dat -N https://github.com/chocolate4u/Iran-v2ray-rules/releases/latest/download/geosite.dat
-        echo -e "${green}chocolate4u datasets have been updated successfully!${plain}"
-        restart
-        update_geo
-        ;;
-    *)
-        echo "Invalid option selected! No updates made."
-        ;;
-    esac
-    
-    systemctl start x-ui
-    before_show_menu
-}
-
 install_acme() {
     # Check if acme.sh is already installed
     if command -v ~/.acme.sh/acme.sh &>/dev/null; then
@@ -1202,10 +1165,10 @@ show_menu() {
 ————————————————
   ${green}17.${plain} SSL Certificate Management
   ${green}18.${plain} IP Limit Management
-  ${green}19.${plain} Update Geo Files
+  
 "
     show_status
-    echo && read -p "Please enter your selection [0-19]: " num
+    echo && read -p "Please enter your selection [0-18]: " num
 
     case "${num}" in
     0)
@@ -1265,11 +1228,8 @@ show_menu() {
     18)
         iplimit_main
         ;;
-    19)
-        update_geo
-        ;;
     *)
-        LOGE "Please enter the correct number [0-19]"
+        LOGE "Please enter the correct number [0-18]"
         ;;
     esac
 }
