@@ -1165,7 +1165,6 @@ show_menu() {
 ————————————————
   ${green}17.${plain} SSL Certificate Management
   ${green}18.${plain} IP Limit Management
-  
 "
     show_status
     echo && read -p "Please enter your selection [0-18]: " num
