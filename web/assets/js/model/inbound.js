@@ -419,42 +419,6 @@ class WsStreamSettings extends XrayCommonClass {
     }
 }
 
-class HttpStreamSettings extends XrayCommonClass {
-    constructor(
-        path = '/',
-        host = [''],
-    ) {
-        super();
-        this.path = path;
-        this.host = host.length === 0 ? [''] : host;
-    }
-
-    addHost(host) {
-        this.host.push(host);
-    }
-
-    removeHost(index) {
-        this.host.splice(index, 1);
-    }
-
-    static fromJson(json = {}) {
-        return new HttpStreamSettings(json.path, json.host);
-    }
-
-    toJson() {
-        let host = [];
-        for (let i = 0; i < this.host.length; ++i) {
-            if (!ObjectUtil.isEmpty(this.host[i])) {
-                host.push(this.host[i]);
-            }
-        }
-        return {
-            path: this.path,
-            host: host,
-        }
-    }
-}
-
 class GrpcStreamSettings extends XrayCommonClass {
     constructor(
         serviceName = "",
@@ -525,7 +489,7 @@ class HTTPUpgradeStreamSettings extends XrayCommonClass {
     }
 }
 
-class SplitHTTPStreamSettings extends XrayCommonClass {
+class xHTTPStreamSettings extends XrayCommonClass {
     constructor(
         path = '/',
         host = '',
@@ -567,7 +531,7 @@ class SplitHTTPStreamSettings extends XrayCommonClass {
     }
 
     static fromJson(json = {}) {
-        return new SplitHTTPStreamSettings(
+        return new xHTTPStreamSettings(
             json.path,
             json.host,
             XrayCommonClass.toHeaders(json.headers),
@@ -953,10 +917,9 @@ class StreamSettings extends XrayCommonClass {
         tcpSettings = new TcpStreamSettings(),
         kcpSettings = new KcpStreamSettings(),
         wsSettings = new WsStreamSettings(),
-        httpSettings = new HttpStreamSettings(),
         grpcSettings = new GrpcStreamSettings(),
         httpupgradeSettings = new HTTPUpgradeStreamSettings(),
-        splithttpSettings = new SplitHTTPStreamSettings(),
+        xhttpSettings = new xHTTPStreamSettings(),
         sockopt = undefined,
     ) {
         super();
@@ -968,10 +931,9 @@ class StreamSettings extends XrayCommonClass {
         this.tcp = tcpSettings;
         this.kcp = kcpSettings;
         this.ws = wsSettings;
-        this.http = httpSettings;
         this.grpc = grpcSettings;
         this.httpupgrade = httpupgradeSettings;
-        this.splithttp = splithttpSettings;
+        this.xhttp = xhttpSettings;
         this.sockopt = sockopt;
     }
 
@@ -1018,10 +980,9 @@ class StreamSettings extends XrayCommonClass {
             TcpStreamSettings.fromJson(json.tcpSettings),
             KcpStreamSettings.fromJson(json.kcpSettings),
             WsStreamSettings.fromJson(json.wsSettings),
-            HttpStreamSettings.fromJson(json.httpSettings),
             GrpcStreamSettings.fromJson(json.grpcSettings),
             HTTPUpgradeStreamSettings.fromJson(json.httpupgradeSettings),
-            SplitHTTPStreamSettings.fromJson(json.splithttpSettings),
+            xHTTPStreamSettings.fromJson(json.xhttpSettings),
             SockoptStreamSettings.fromJson(json.sockopt),
         );
     }
@@ -1037,10 +998,9 @@ class StreamSettings extends XrayCommonClass {
             tcpSettings: network === 'tcp' ? this.tcp.toJson() : undefined,
             kcpSettings: network === 'kcp' ? this.kcp.toJson() : undefined,
             wsSettings: network === 'ws' ? this.ws.toJson() : undefined,
-            httpSettings: network === 'http' ? this.http.toJson() : undefined,
             grpcSettings: network === 'grpc' ? this.grpc.toJson() : undefined,
             httpupgradeSettings: network === 'httpupgrade' ? this.httpupgrade.toJson() : undefined,
-            splithttpSettings: network === 'splithttp' ? this.splithttp.toJson() : undefined,
+            xhttpSettings: network === 'xhttp' ? this.xhttp.toJson() : undefined,
             sockopt: this.sockopt != undefined ? this.sockopt.toJson() : undefined,
         };
     }
@@ -1146,16 +1106,12 @@ class Inbound extends XrayCommonClass {
         return this.network === "grpc";
     }
 
-    get isH2() {
-        return this.network === "http";
-    }
-
     get isHttpupgrade() {
         return this.network === "httpupgrade";
     }
 
-    get isSplithttp() {
-        return this.network === "splithttp";
+    get isxhttp() {
+        return this.network === "xhttp";
     }
 
     // Shadowsocks
@@ -1194,12 +1150,10 @@ class Inbound extends XrayCommonClass {
             return this.getHeader(this.stream.tcp.request, 'host');
         } else if (this.isWs) {
             return this.stream.ws.host?.length > 0 ? this.stream.ws.host : this.getHeader(this.stream.ws, 'host');
-        } else if (this.isH2) {
-            return this.stream.http.host[0];
         } else if (this.isHttpupgrade) {
             return this.stream.httpupgrade.host?.length > 0 ? this.stream.httpupgrade.host : this.getHeader(this.stream.httpupgrade, 'host');
-        } else if (this.isSplithttp) {
-            return this.stream.splithttp.host?.length > 0 ? this.stream.splithttp.host : this.getHeader(this.stream.splithttp, 'host');
+        } else if (this.isxhttp) {
+            return this.stream.xhttp.host?.length > 0 ? this.stream.xhttp.host : this.getHeader(this.stream.xhttp, 'host');
         }
         return null;
     }
@@ -1209,12 +1163,10 @@ class Inbound extends XrayCommonClass {
             return this.stream.tcp.request.path[0];
         } else if (this.isWs) {
             return this.stream.ws.path;
-        } else if (this.isH2) {
-            return this.stream.http.path;
         } else if (this.isHttpupgrade) {
             return this.stream.httpupgrade.path;
-        } else if (this.isSplithttp) {
-            return this.stream.splithttp.path;
+        } else if (this.isxhttp) {
+            return this.stream.xhttp.path;
         }
         return null;
     }
@@ -1238,7 +1190,7 @@ class Inbound extends XrayCommonClass {
 
     canEnableTls() {
         if (![Protocols.VMESS, Protocols.VLESS, Protocols.TROJAN, Protocols.SHADOWSOCKS].includes(this.protocol)) return false;
-        return ["tcp", "ws", "http", "grpc", "httpupgrade", "splithttp"].includes(this.network);
+        return ["tcp", "ws", "grpc", "httpupgrade", "xhttp"].includes(this.network);
     }
 
     //this is used for xtls-rprx-vision
@@ -1251,7 +1203,7 @@ class Inbound extends XrayCommonClass {
 
     canEnableReality() {
         if (![Protocols.VLESS, Protocols.TROJAN].includes(this.protocol)) return false;
-        return ["tcp", "http", "grpc", "splithttp"].includes(this.network);
+        return ["tcp", "grpc", "xhttp"].includes(this.network);
     }
 
     canEnableStream() {
@@ -1302,10 +1254,6 @@ class Inbound extends XrayCommonClass {
             const ws = this.stream.ws;
             obj.path = ws.path;
             obj.host = ws.host?.length > 0 ? ws.host : this.getHeader(ws, 'host');
-        } else if (network === 'http') {
-            obj.net = 'h2';
-            obj.path = this.stream.http.path;
-            obj.host = this.stream.http.host.join(',');
         } else if (network === 'grpc') {
             obj.path = this.stream.grpc.serviceName;
             obj.authority = this.stream.grpc.authority;
@@ -1316,11 +1264,11 @@ class Inbound extends XrayCommonClass {
             const httpupgrade = this.stream.httpupgrade;
             obj.path = httpupgrade.path;
             obj.host = httpupgrade.host?.length > 0 ? httpupgrade.host : this.getHeader(httpupgrade, 'host');
-        } else if (network === 'splithttp') {
-            const splithttp = this.stream.splithttp;
-            obj.path = splithttp.path;
-            obj.host = splithttp.host?.length > 0 ? splithttp.host : this.getHeader(splithttp, 'host');
-            obj.mode = splithttp.mode;
+        } else if (network === 'xhttp') {
+            const xhttp = this.stream.xhttp;
+            obj.path = xhttp.path;
+            obj.host = xhttp.host?.length > 0 ? xhttp.host : this.getHeader(xhttp, 'host');
+            obj.mode = xhttp.mode;
         }
 
         if (security === 'tls') {
@@ -1371,11 +1319,6 @@ class Inbound extends XrayCommonClass {
                 params.set("path", ws.path);
                 params.set("host", ws.host?.length > 0 ? ws.host : this.getHeader(ws, 'host'));
                 break;
-            case "http":
-                const http = this.stream.http;
-                params.set("path", http.path);
-                params.set("host", http.host);
-                break;
             case "grpc":
                 const grpc = this.stream.grpc;
                 params.set("serviceName", grpc.serviceName);
@@ -1389,11 +1332,11 @@ class Inbound extends XrayCommonClass {
                 params.set("path", httpupgrade.path);
                 params.set("host", httpupgrade.host?.length > 0 ? httpupgrade.host : this.getHeader(httpupgrade, 'host'));
                 break;
-            case "splithttp":
-                const splithttp = this.stream.splithttp;
-                params.set("path", splithttp.path);
-                params.set("host", splithttp.host?.length > 0 ? splithttp.host : this.getHeader(splithttp, 'host'));
-                params.set("mode", splithttp.mode);
+            case "xhttp":
+                const xhttp = this.stream.xhttp;
+                params.set("path", xhttp.path);
+                params.set("host", xhttp.host?.length > 0 ? xhttp.host : this.getHeader(xhttp, 'host'));
+                params.set("mode", xhttp.mode);
                 break;
         }
 
@@ -1475,11 +1418,6 @@ class Inbound extends XrayCommonClass {
                 params.set("path", ws.path);
                 params.set("host", ws.host?.length > 0 ? ws.host : this.getHeader(ws, 'host'));
                 break;
-            case "http":
-                const http = this.stream.http;
-                params.set("path", http.path);
-                params.set("host", http.host);
-                break;
             case "grpc":
                 const grpc = this.stream.grpc;
                 params.set("serviceName", grpc.serviceName);
@@ -1493,11 +1431,11 @@ class Inbound extends XrayCommonClass {
                 params.set("path", httpupgrade.path);
                 params.set("host", httpupgrade.host?.length > 0 ? httpupgrade.host : this.getHeader(httpupgrade, 'host'));
                 break;
-            case "splithttp":
-                const splithttp = this.stream.splithttp;
-                params.set("path", splithttp.path);
-                params.set("host", splithttp.host?.length > 0 ? splithttp.host : this.getHeader(splithttp, 'host'));
-                params.set("mode", splithttp.mode);
+            case "xhttp":
+                const xhttp = this.stream.xhttp;
+                params.set("path", xhttp.path);
+                params.set("host", xhttp.host?.length > 0 ? xhttp.host : this.getHeader(xhttp, 'host'));
+                params.set("mode", xhttp.mode);
                 break;
         }
 
@@ -1558,11 +1496,6 @@ class Inbound extends XrayCommonClass {
                 params.set("path", ws.path);
                 params.set("host", ws.host?.length > 0 ? ws.host : this.getHeader(ws, 'host'));
                 break;
-            case "http":
-                const http = this.stream.http;
-                params.set("path", http.path);
-                params.set("host", http.host);
-                break;
             case "grpc":
                 const grpc = this.stream.grpc;
                 params.set("serviceName", grpc.serviceName);
@@ -1576,11 +1509,11 @@ class Inbound extends XrayCommonClass {
                 params.set("path", httpupgrade.path);
                 params.set("host", httpupgrade.host?.length > 0 ? httpupgrade.host : this.getHeader(httpupgrade, 'host'));
                 break;
-            case "splithttp":
-                const splithttp = this.stream.splithttp;
-                params.set("path", splithttp.path);
-                params.set("host", splithttp.host?.length > 0 ? splithttp.host : this.getHeader(splithttp, 'host'));
-                params.set("mode", splithttp.mode);
+            case "xhttp":
+                const xhttp = this.stream.xhttp;
+                params.set("path", xhttp.path);
+                params.set("host", xhttp.host?.length > 0 ? xhttp.host : this.getHeader(xhttp, 'host'));
+                params.set("mode", xhttp.mode);
                 break;
         }
 
