@@ -150,115 +150,6 @@ class TcpStreamSettings extends CommonClass {
     }
 }
 
-class KcpStreamSettings extends CommonClass {
-    constructor(
-        mtu = 1350,
-        tti = 50,
-        uplinkCapacity = 5,
-        downlinkCapacity = 20,
-        congestion = false,
-        readBufferSize = 2,
-        writeBufferSize = 2,
-        type = 'none',
-        seed = '',
-    ) {
-        super();
-        this.mtu = mtu;
-        this.tti = tti;
-        this.upCap = uplinkCapacity;
-        this.downCap = downlinkCapacity;
-        this.congestion = congestion;
-        this.readBuffer = readBufferSize;
-        this.writeBuffer = writeBufferSize;
-        this.type = type;
-        this.seed = seed;
-    }
-
-    static fromJson(json = {}) {
-        return new KcpStreamSettings(
-            json.mtu,
-            json.tti,
-            json.uplinkCapacity,
-            json.downlinkCapacity,
-            json.congestion,
-            json.readBufferSize,
-            json.writeBufferSize,
-            ObjectUtil.isEmpty(json.header) ? 'none' : json.header.type,
-            json.seed,
-        );
-    }
-
-    toJson() {
-        return {
-            mtu: this.mtu,
-            tti: this.tti,
-            uplinkCapacity: this.upCap,
-            downlinkCapacity: this.downCap,
-            congestion: this.congestion,
-            readBufferSize: this.readBuffer,
-            writeBufferSize: this.writeBuffer,
-            header: {
-                type: this.type,
-            },
-            seed: this.seed,
-        };
-    }
-}
-
-class WsStreamSettings extends CommonClass {
-    constructor(
-        path = '/', 
-        host = '',
-        heartbeatPeriod = 0,
-    ) {
-        super();
-        this.path = path;
-        this.host = host;
-        this.heartbeatPeriod = heartbeatPeriod;
-    }
-
-    static fromJson(json = {}) {
-        return new WsStreamSettings(
-            json.path,
-            json.host,
-            json.heartbeatPeriod,
-        );
-    }
-
-    toJson() {
-        return {
-            path: this.path,
-            host: this.host,
-            heartbeatPeriod: this.heartbeatPeriod
-        };
-    }
-}
-
-class GrpcStreamSettings extends CommonClass {
-    constructor(
-        serviceName = "",
-        authority = "",
-        multiMode = false
-    ) {
-        super();
-        this.serviceName = serviceName;
-        this.authority = authority;
-        this.multiMode = multiMode;
-    }
-
-    static fromJson(json = {}) {
-        return new GrpcStreamSettings(json.serviceName, json.authority, json.multiMode);
-    }
-
-    toJson() {
-        return {
-            serviceName: this.serviceName,
-            authority: this.authority,
-            multiMode: this.multiMode
-        }
-    }
-}
-
 class HttpUpgradeStreamSettings extends CommonClass {
     constructor(path = '/', host = '') {
         super();
@@ -421,14 +312,11 @@ class SockoptStreamSettings extends CommonClass {
 
 class StreamSettings extends CommonClass {
     constructor(
-        network = 'tcp',
+        network = 'tcp,udp',
         security = 'none',
         tlsSettings = new TlsStreamSettings(),
         realitySettings = new RealityStreamSettings(),
         tcpSettings = new TcpStreamSettings(),
-        kcpSettings = new KcpStreamSettings(),
-        wsSettings = new WsStreamSettings(),
-        grpcSettings = new GrpcStreamSettings(),
         httpupgradeSettings = new HttpUpgradeStreamSettings(),
         xhttpSettings = new xHTTPStreamSettings(),
         sockopt = undefined,
@@ -439,9 +327,6 @@ class StreamSettings extends CommonClass {
         this.tls = tlsSettings;
         this.reality = realitySettings;
         this.tcp = tcpSettings;
-        this.kcp = kcpSettings;
-        this.ws = wsSettings;
-        this.grpc = grpcSettings;
         this.httpupgrade = httpupgradeSettings;
         this.xhttp = xhttpSettings;
         this.sockopt = sockopt;
@@ -470,9 +355,6 @@ class StreamSettings extends CommonClass {
             TlsStreamSettings.fromJson(json.tlsSettings),
             RealityStreamSettings.fromJson(json.realitySettings),
             TcpStreamSettings.fromJson(json.tcpSettings),
-            KcpStreamSettings.fromJson(json.kcpSettings),
-            WsStreamSettings.fromJson(json.wsSettings),
-            GrpcStreamSettings.fromJson(json.grpcSettings),
             HttpUpgradeStreamSettings.fromJson(json.httpupgradeSettings),
             xHTTPStreamSettings.fromJson(json.xhttpSettings),
             SockoptStreamSettings.fromJson(json.sockopt),
@@ -487,9 +369,6 @@ class StreamSettings extends CommonClass {
             tlsSettings: this.security == 'tls' ? this.tls.toJson() : undefined,
             realitySettings: this.security == 'reality' ? this.reality.toJson() : undefined,
             tcpSettings: network === 'tcp' ? this.tcp.toJson() : undefined,
-            kcpSettings: network === 'kcp' ? this.kcp.toJson() : undefined,
-            wsSettings: network === 'ws' ? this.ws.toJson() : undefined,
-            grpcSettings: network === 'grpc' ? this.grpc.toJson() : undefined,
             httpupgradeSettings: network === 'httpupgrade' ? this.httpupgrade.toJson() : undefined,
             xhttpSettings: network === 'xhttp' ? this.xhttp.toJson() : undefined,
             sockopt: this.sockopt != undefined ? this.sockopt.toJson() : undefined,
@@ -556,7 +435,7 @@ class Outbound extends CommonClass {
 
     canEnableTls() {
         if (![Protocols.VMess, Protocols.VLESS, Protocols.Trojan, Protocols.Shadowsocks].includes(this.protocol)) return false;
-        return ["tcp", "ws", "grpc", "httpupgrade", "xhttp"].includes(this.stream.network);
+        return ["tcp", "httpupgrade", "xhttp"].includes(this.stream.network);
     }
 
     //this is used for xtls-rprx-vision
@@ -569,7 +448,7 @@ class Outbound extends CommonClass {
 
     canEnableReality() {
         if (![Protocols.VLESS, Protocols.Trojan].includes(this.protocol)) return false;
-        return ["tcp", "grpc", "xhttp"].includes(this.stream.network);
+        return ["tcp", "xhttp"].includes(this.stream.network);
     }
 
     canEnableStream() {
@@ -661,14 +540,6 @@ class Outbound extends CommonClass {
                 json.type,
                 json.host ?? '',
                 json.path ?? '');
-        } else if (network === 'kcp') {
-            stream.kcp = new KcpStreamSettings();
-            stream.type = json.type;
-            stream.seed = json.path;
-        } else if (network === 'ws') {
-            stream.ws = new WsStreamSettings(json.path, json.host);
-        } else if (network === 'grpc') {
-            stream.grpc = new GrpcStreamSettings(json.path, json.authority, json.type == 'multi');
         } else if (network === 'httpupgrade') {
             stream.httpupgrade = new HttpUpgradeStreamSettings(json.path, json.host);
         } else if (network === 'xhttp') {
@@ -700,17 +571,6 @@ class Outbound extends CommonClass {
 
         if (type === 'tcp' || type === 'none') {
             stream.tcp = new TcpStreamSettings(headerType ?? 'none', host, path);
-        } else if (type === 'kcp') {
-            stream.kcp = new KcpStreamSettings();
-            stream.kcp.type = headerType ?? 'none';
-            stream.kcp.seed = path;
-        } else if (type === 'ws') {
-            stream.ws = new WsStreamSettings(path, host);
-        } else if (type === 'grpc') {
-            stream.grpc = new GrpcStreamSettings(
-                url.searchParams.get('serviceName') ?? '',
-                url.searchParams.get('authority') ?? '',
-                url.searchParams.get('mode') == 'multi');
         } else if (type === 'httpupgrade') {
             stream.httpupgrade = new HttpUpgradeStreamSettings(path, host);
         } else if (type === 'xhttp') {
@@ -1094,6 +954,7 @@ Outbound.SocksSettings = class extends CommonClass {
         };
     }
 };
+
 Outbound.HttpSettings = class extends CommonClass {
     constructor(address, port, user, pass) {
         super();
