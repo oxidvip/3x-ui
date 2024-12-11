@@ -267,9 +267,6 @@
         <a-form-item label='{{ i18n "transmission" }}'>
           <a-select v-model="outbound.stream.network" @change="streamNetworkChange" :dropdown-class-name="themeSwitcher.currentTheme">
             <a-select-option value="tcp">TCP (RAW)</a-select-option>
-            <a-select-option value="kcp">mKCP</a-select-option>
-            <a-select-option value="ws">WebSocket</a-select-option>
-            <a-select-option value="grpc">gRPC</a-select-option>
             <a-select-option value="httpupgrade">HTTPUpgrade</a-select-option>
             <a-select-option value="xhttp">XHTTP</a-select-option>
           </a-select>
@@ -288,71 +285,6 @@
               <a-input v-model.trim="outbound.stream.tcp.path"></a-input>
             </a-form-item>
           </template>
-        </template>
-
-        <!-- kcp -->
-        <template v-if="outbound.stream.network === 'kcp'">
-          <a-form-item label='{{ i18n "camouflage" }}'>
-            <a-select v-model="outbound.stream.kcp.type" :dropdown-class-name="themeSwitcher.currentTheme">
-              <a-select-option value="none">None</a-select-option>
-              <a-select-option value="srtp">SRTP</a-select-option>
-              <a-select-option value="utp">uTP</a-select-option>
-              <a-select-option value="wechat-video">WeChat</a-select-option>
-              <a-select-option value="dtls">DTLS 1.2</a-select-option>
-              <a-select-option value="wireguard">WireGuard</a-select-option>
-              <a-select-option value="dns">DNS</a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item label='{{ i18n "password" }}'>
-            <a-input v-model="outbound.stream.kcp.seed"></a-input>
-          </a-form-item>
-          <a-form-item label='MTU'>
-            <a-input-number v-model.number="outbound.stream.kcp.mtu" min="0"></a-input-number>
-          </a-form-item>
-          <a-form-item label='TTI (ms)'>
-            <a-input-number v-model.number="outbound.stream.kcp.tti" min="0"></a-input-number>
-          </a-form-item>
-          <a-form-item label='Uplink (MB/s)'>
-            <a-input-number v-model.number="outbound.stream.kcp.upCap" min="0"></a-input-number>
-          </a-form-item>
-          <a-form-item label='Downlink (MB/s)'>
-            <a-input-number v-model.number="outbound.stream.kcp.downCap" min="0"></a-input-number>
-          </a-form-item>
-          <a-form-item label='Congestion'>
-            <a-switch v-model="outbound.stream.kcp.congestion"></a-switch>
-          </a-form-item>
-          <a-form-item label='Read Buffer (MB)'>
-            <a-input-number v-model.number="outbound.stream.kcp.readBuffer" min="0"></a-input-number>
-          </a-form-item>
-          <a-form-item label='Write Buffer (MB)'>
-            <a-input-number v-model.number="outbound.stream.kcp.writeBuffer" min="0"></a-input-number>
-          </a-form-item>
-        </template>
-
-        <!-- ws -->
-        <template v-if="outbound.stream.network === 'ws'">
-          <a-form-item label='{{ i18n "host" }}'>
-            <a-input v-model="outbound.stream.ws.host"></a-input>
-          </a-form-item>
-          <a-form-item label='{{ i18n "path" }}'>
-            <a-input v-model.trim="outbound.stream.ws.path"></a-input>
-          </a-form-item>
-          <a-form-item label='Heartbeat Period'>
-            <a-input-number v-model.number="outbound.stream.ws.heartbeatPeriod" :min="0"></a-input-number>
-          </a-form-item>
-        </template>
-        
-        <!-- grpc -->
-        <template v-if="outbound.stream.network === 'grpc'">
-          <a-form-item label='Service Name'>
-            <a-input v-model.trim="outbound.stream.grpc.serviceName"></a-input>
-          </a-form-item>
-          <a-form-item label="Authority">
-            <a-input v-model.trim="outbound.stream.grpc.authority"></a-input>
-          </a-form-item>
-          <a-form-item label='Multi Mode'>
-            <a-switch v-model="outbound.stream.grpc.multiMode"></a-switch>
-          </a-form-item>
         </template>
 
         <!-- httpupgrade -->
