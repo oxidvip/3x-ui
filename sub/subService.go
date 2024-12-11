@@ -194,27 +194,6 @@ func (s *SubService) genVmessLink(inbound *model.Inbound, email string) string {
 			headers, _ := request["headers"].(map[string]interface{})
 			obj["host"] = searchHost(headers)
 		}
-	case "kcp":
-		kcp, _ := stream["kcpSettings"].(map[string]interface{})
-		header, _ := kcp["header"].(map[string]interface{})
-		obj["type"], _ = header["type"].(string)
-		obj["path"], _ = kcp["seed"].(string)
-	case "ws":
-		ws, _ := stream["wsSettings"].(map[string]interface{})
-		obj["path"] = ws["path"].(string)
-		if host, ok := ws["host"].(string); ok && len(host) > 0 {
-			obj["host"] = host
-		} else {
-			headers, _ := ws["headers"].(map[string]interface{})
-			obj["host"] = searchHost(headers)
-		}
-	case "grpc":
-		grpc, _ := stream["grpcSettings"].(map[string]interface{})
-		obj["path"] = grpc["serviceName"].(string)
-		obj["authority"] = grpc["authority"].(string)
-		if grpc["multiMode"].(bool) {
-			obj["type"] = "multi"
-		}
 	case "httpupgrade":
 		httpupgrade, _ := stream["httpupgradeSettings"].(map[string]interface{})
 		obj["path"] = httpupgrade["path"].(string)
@@ -341,27 +320,6 @@ func (s *SubService) genVlessLink(inbound *model.Inbound, email string) string {
 			headers, _ := request["headers"].(map[string]interface{})
 			params["host"] = searchHost(headers)
 			params["headerType"] = "http"
-		}
-	case "kcp":
-		kcp, _ := stream["kcpSettings"].(map[string]interface{})
-		header, _ := kcp["header"].(map[string]interface{})
-		params["headerType"] = header["type"].(string)
-		params["seed"] = kcp["seed"].(string)
-	case "ws":
-		ws, _ := stream["wsSettings"].(map[string]interface{})
-		params["path"] = ws["path"].(string)
-		if host, ok := ws["host"].(string); ok && len(host) > 0 {
-			params["host"] = host
-		} else {
-			headers, _ := ws["headers"].(map[string]interface{})
-			params["host"] = searchHost(headers)
-		}
-	case "grpc":
-		grpc, _ := stream["grpcSettings"].(map[string]interface{})
-		params["serviceName"] = grpc["serviceName"].(string)
-		params["authority"], _ = grpc["authority"].(string)
-		if grpc["multiMode"].(bool) {
-			params["mode"] = "multi"
 		}
 	case "httpupgrade":
 		httpupgrade, _ := stream["httpupgradeSettings"].(map[string]interface{})
@@ -536,27 +494,6 @@ func (s *SubService) genTrojanLink(inbound *model.Inbound, email string) string 
 			params["host"] = searchHost(headers)
 			params["headerType"] = "http"
 		}
-	case "kcp":
-		kcp, _ := stream["kcpSettings"].(map[string]interface{})
-		header, _ := kcp["header"].(map[string]interface{})
-		params["headerType"] = header["type"].(string)
-		params["seed"] = kcp["seed"].(string)
-	case "ws":
-		ws, _ := stream["wsSettings"].(map[string]interface{})
-		params["path"] = ws["path"].(string)
-		if host, ok := ws["host"].(string); ok && len(host) > 0 {
-			params["host"] = host
-		} else {
-			headers, _ := ws["headers"].(map[string]interface{})
-			params["host"] = searchHost(headers)
-		}
-	case "grpc":
-		grpc, _ := stream["grpcSettings"].(map[string]interface{})
-		params["serviceName"] = grpc["serviceName"].(string)
-		params["authority"], _ = grpc["authority"].(string)
-		if grpc["multiMode"].(bool) {
-			params["mode"] = "multi"
-		}
 	case "httpupgrade":
 		httpupgrade, _ := stream["httpupgradeSettings"].(map[string]interface{})
 		params["path"] = httpupgrade["path"].(string)
@@ -729,27 +666,6 @@ func (s *SubService) genShadowsocksLink(inbound *model.Inbound, email string) st
 			headers, _ := request["headers"].(map[string]interface{})
 			params["host"] = searchHost(headers)
 			params["headerType"] = "http"
-		}
-	case "kcp":
-		kcp, _ := stream["kcpSettings"].(map[string]interface{})
-		header, _ := kcp["header"].(map[string]interface{})
-		params["headerType"] = header["type"].(string)
-		params["seed"] = kcp["seed"].(string)
-	case "ws":
-		ws, _ := stream["wsSettings"].(map[string]interface{})
-		params["path"] = ws["path"].(string)
-		if host, ok := ws["host"].(string); ok && len(host) > 0 {
-			params["host"] = host
-		} else {
-			headers, _ := ws["headers"].(map[string]interface{})
-			params["host"] = searchHost(headers)
-		}
-	case "grpc":
-		grpc, _ := stream["grpcSettings"].(map[string]interface{})
-		params["serviceName"] = grpc["serviceName"].(string)
-		params["authority"], _ = grpc["authority"].(string)
-		if grpc["multiMode"].(bool) {
-			params["mode"] = "multi"
 		}
 	case "httpupgrade":
 		httpupgrade, _ := stream["httpupgradeSettings"].(map[string]interface{})
