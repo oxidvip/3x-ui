@@ -785,7 +785,7 @@ class SockoptStreamSettings extends XrayCommonClass {
 
 class StreamSettings extends XrayCommonClass {
     constructor(
-        network = 'tcp,udp',
+        network = 'tcp',
         security = 'none',
         externalProxy = [],
         tlsSettings = new TlsStreamSettings(),
