@@ -312,7 +312,7 @@ class SockoptStreamSettings extends CommonClass {
 
 class StreamSettings extends CommonClass {
     constructor(
-        network = 'tcp,udp',
+        network = 'tcp',
         security = 'none',
         tlsSettings = new TlsStreamSettings(),
         realitySettings = new RealityStreamSettings(),
